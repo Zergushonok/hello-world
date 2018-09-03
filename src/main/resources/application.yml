@@ -1,0 +1,23 @@
+spring:
+  profiles:
+    active: [onetime-on-startup, default]
+
+service:
+  input:
+    clients:
+      file:
+        path: input
+        name: clients.txt
+    orders:
+      file:
+        path: input
+        name: orders.txt
+  result:
+    file:
+      path: result
+      name: result.txt
+
+logging:
+  level:
+    ROOT: INFO
+    hellosbt: DEBUG
