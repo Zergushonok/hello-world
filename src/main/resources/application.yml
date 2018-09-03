@@ -19,5 +19,5 @@ service:
 
 logging:
   level:
-    ROOT: INFO
+    ROOT: WARN
     hellosbt: INFO

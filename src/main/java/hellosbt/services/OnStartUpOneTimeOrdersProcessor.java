@@ -37,6 +37,8 @@ public class OnStartUpOneTimeOrdersProcessor {
 
   @PostConstruct
   public void doWork() {
+    log.info("One-time start-up orders processor has started processing orders");
     assetsConsumer.accept(ordersProcessor.apply(assetsSupplier.get(), ordersSupplier.get()));
+    log.info("One-time start-up orders processor has finished his work");
   }
 }

@@ -18,6 +18,7 @@ import hellosbt.data.orders.OrdersList;
 import java.util.Collection;
 import java.util.List;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +39,7 @@ import org.springframework.stereotype.Service;
 
 @Service @Profile({FILE_BASED, TEST})
 @NoArgsConstructor
+@Slf4j
 public class OrdersFromTabSeparatedLinesConverter implements OrdersFromStringLinesConverter {
 
   //todo: de-hardcode
@@ -46,19 +48,30 @@ public class OrdersFromTabSeparatedLinesConverter implements OrdersFromStringLin
 
   @Override
   public Orders apply(Collection<String> ordersLines) {
+    log.debug("Processing {} lines of orders. Expected assets dictionary is: {}",
+        ordersLines.size(), expectedAssetsDictionary);
+
     return OrdersList.of(toOrders(ordersLines));
   }
 
   private List<Order> toOrders(Collection<String> ordersLines) {
-    return ordersLines.stream().map(this::toOrder).collect(toList());
+    List<Order> orders = ordersLines.stream().map(this::toOrder).collect(toList());
+
+    log.debug("Converted {} lines of orders into {} orders", ordersLines.size(), orders.size());
+    return orders;
   }
 
   private Order toOrder(String orderLine) {
+    log.trace("Parsing the order line {}", orderLine);
+
     List<String> orderData = asList(orderLine.split("\t"));
     validate(orderData);
 
     try {
-      return orderFromData(orderData);
+      Order order = orderFromData(orderData);
+
+      log.trace("Parsed the order line {} into the order {}", orderLine, order);
+      return order;
 
     } catch (NumberFormatException e) {
       throw new IllegalArgumentException(

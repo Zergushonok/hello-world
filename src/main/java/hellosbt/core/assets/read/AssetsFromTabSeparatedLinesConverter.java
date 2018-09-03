@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -42,6 +43,7 @@ import org.springframework.stereotype.Service;
 
 @Service @Profile({FILE_BASED, TEST})
 @NoArgsConstructor
+@Slf4j
 public class AssetsFromTabSeparatedLinesConverter implements AssetsFromStringLinesConverter {
 
   //todo: de-hardcode
@@ -50,6 +52,8 @@ public class AssetsFromTabSeparatedLinesConverter implements AssetsFromStringLin
 
   @Override
   public Assets apply(Collection<String> assetsLines) {
+    log.debug("Processing {} lines of assets. Expected assets dictionary is: {}",
+        assetsLines.size(), expectedAssetsOrderedDictionary);
 
     return AssetsByHolders.of(toClientsSet(assetsLines).stream()
         .collect(LinkedHashMap::new,
@@ -58,16 +62,26 @@ public class AssetsFromTabSeparatedLinesConverter implements AssetsFromStringLin
   }
 
   private Set<AssetsHolder> toClientsSet(Collection<String> assetsLines) {
-    return assetsLines.stream().map(this::toClient).collect(toCollection(LinkedHashSet::new));
+
+    Set<AssetsHolder> assets = assetsLines.stream().map(this::toClient)
+        .collect(toCollection(LinkedHashSet::new));
+
+    log.debug("Converted {} lines of assets into {} assets", assetsLines.size(), assets.size());
+    return assets;
   }
 
   private AssetsHolder toClient(String assetsLine) {
+    log.trace("Parsing the assets line {}", assetsLine);
+
     List<String> nameAndAssetsData = asList(assetsLine.split("\t"));
     failIfAssetsNumberDiffersFromExpected(nameAndAssetsData, assetsLine);
 
     try {
-      return Client.of(nameAndAssetsData.get(0), Integer.valueOf(nameAndAssetsData.get(1)),
+      Client client = Client.of(nameAndAssetsData.get(0), Integer.valueOf(nameAndAssetsData.get(1)),
           toAssetsQuantities(nameAndAssetsData));
+
+      log.trace("Parsed the assets line {} into the client {}", assetsLine, client);
+      return client;
 
     } catch (NumberFormatException e) {
       throw new IllegalArgumentException(
