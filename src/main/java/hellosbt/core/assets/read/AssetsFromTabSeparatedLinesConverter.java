@@ -11,7 +11,7 @@ import static java.util.stream.Collectors.toList;
 
 import hellosbt.data.assets.Asset;
 import hellosbt.data.clients.Assets;
-import hellosbt.data.assets.AssetsByHolders;
+import hellosbt.data.clients.AssetsByHolders;
 import hellosbt.data.clients.AssetsHolder;
 import hellosbt.data.clients.Client;
 import hellosbt.data.assets.NamedAsset;

@@ -5,7 +5,7 @@ import static lombok.AccessLevel.PRIVATE;
 import hellosbt.core.assets.write.AssetsToFileWriter;
 import hellosbt.core.assets.write.AssetsToTabSeparatedLinesConverter;
 import hellosbt.data.assets.Asset;
-import hellosbt.data.assets.AssetsByHolders;
+import hellosbt.data.clients.AssetsByHolders;
 import hellosbt.data.clients.AssetsHolder;
 import hellosbt.data.clients.Client;
 import hellosbt.data.assets.NamedAsset;
