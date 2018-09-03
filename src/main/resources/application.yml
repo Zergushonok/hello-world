@@ -20,4 +20,4 @@ service:
 logging:
   level:
     ROOT: WARN
-    hellosbt: DEBUG
+    hellosbt: INFO
