@@ -27,10 +27,25 @@ import lombok.NoArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+/**
+ * Assets form String lines converter implementation that expects each input line to be an array
+ * of a client's info, his balance, and his assets quantities separated by \t.
+ *
+ * It expects each line in the input collection to be valid, that is:
+ * - It has the same number of assets as listed in the supplied dictionary
+ * - All asset quantities, as well as the client's balance, are valid Integers (can be negative)
+ * If those conditions are not met, an exception is thrown.
+ *
+ * An Assets instance created by this converter is going to have all of the Assets listed in the
+ * dictionary, in the same order they are listed. The quantities for each asset are set in the
+ * same order they were encountered while parsing the line.
+ */
+
 @Service @Profile({FILE_BASED, TEST})
 @NoArgsConstructor
 public class AssetsFromTabSeparatedLinesConverter implements AssetsFromStringLinesConverter {
 
+  //todo: de-hardcode
   private static final List<Asset> expectedAssetsOrderedDictionary = asList(
       NamedAsset.of("A"), NamedAsset.of("B"), NamedAsset.of("C"), NamedAsset.of("D"));
 

@@ -21,10 +21,26 @@ import lombok.NoArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+/**
+ * Orders form String lines converter implementation that expects each input line to be an array
+ * of an orders's parameters separated by \t.
+ *
+ * It expects each line in the input collection to be valid, that is:
+ * - It has exactly 5 values: name, type, asset, price, and quantity
+ * - Price and quantity are valid positive Integers
+ * - Asset name can be found in the supplied expected assets dictionary
+ * - Order type is described in the Order.Type enum
+ * If those conditions are not met, an exception is thrown.
+ *
+ * An Orders instance created by this converter is going to have all of the Orders provided to
+ * this converter as String lines, in the same order they were provided.
+ */
+
 @Service @Profile({FILE_BASED, TEST})
 @NoArgsConstructor
 public class OrdersFromTabSeparatedLinesConverter implements OrdersFromStringLinesConverter {
 
+  //todo: de-hardcode
   private static final List<Asset> expectedAssetsDictionary =
       asList(NamedAsset.of("A"), NamedAsset.of("B"), NamedAsset.of("C"), NamedAsset.of("D"));
 

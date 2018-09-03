@@ -13,6 +13,15 @@ import lombok.NoArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+/**
+ * Assets to string lines converter implementation that transforms each AssetHolder (i.e. Client)
+ * into a line of text that is going to be the list of the Client's pre-defined parameters,
+ * separated by \t, in a pre-defined order: name, wealth, first asset quantity, second, and so on.
+ *
+ * Asset quantities are going to be written into the line in the same order they were encountered
+ * while traversing the client's Assets map.
+ */
+
 @Service @Profile({FILE_BASED, TEST})
 @NoArgsConstructor
 public class AssetsToTabSeparatedLinesConverter implements AssetsToStringLinesConverter {
