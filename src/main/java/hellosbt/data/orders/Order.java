@@ -11,6 +11,10 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+/**
+ * An abstraction that represents a trade order
+ */
+
 public interface Order {
 
   AssetsHolder getHolder();
@@ -23,6 +27,7 @@ public interface Order {
 
   Integer getQuantity();
 
+  //todo: should it really be here? probably not
   @RequiredArgsConstructor(access = PRIVATE)
   @FieldDefaults(level = PRIVATE, makeFinal = true) @Getter
   enum Type {
