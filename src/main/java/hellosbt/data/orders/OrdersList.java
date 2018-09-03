@@ -8,6 +8,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
+/**
+ * An implementation of Orders that stores orders in a list.
+ */
+
 @RequiredArgsConstructor(staticName = "of")
 @FieldDefaults(level = PRIVATE, makeFinal = true) @Getter
 @ToString

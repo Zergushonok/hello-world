@@ -8,6 +8,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
+/**
+ * Simple implementation of an Asset that uses name as its unique identifier.
+ */
+
 @RequiredArgsConstructor(staticName = "of")
 @FieldDefaults(level = PRIVATE, makeFinal = true) @Getter
 @EqualsAndHashCode @ToString
