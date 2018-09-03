@@ -1,6 +1,7 @@
 package hellosbt.core.assets.read;
 
 import static hellosbt.config.Spring.Profiles.DEFAULT;
+import static hellosbt.config.Spring.Profiles.FILE_BASED;
 import static hellosbt.config.Spring.Profiles.TEST;
 import static java.lang.String.format;
 import static java.nio.file.Files.readAllLines;
@@ -18,7 +19,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-@Service @Profile({DEFAULT, TEST})
+@Service @Profile({FILE_BASED, TEST})
 @FieldDefaults(level = PRIVATE, makeFinal = true) @Getter
 public class AssetsFromFileReader implements AssetsSupplier {
 

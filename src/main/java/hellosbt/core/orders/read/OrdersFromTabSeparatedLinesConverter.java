@@ -2,6 +2,7 @@ package hellosbt.core.orders.read;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static hellosbt.config.Spring.Profiles.DEFAULT;
+import static hellosbt.config.Spring.Profiles.FILE_BASED;
 import static hellosbt.config.Spring.Profiles.TEST;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
@@ -20,7 +21,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-@Service @Profile({DEFAULT, TEST})
+@Service @Profile({FILE_BASED, TEST})
 @NoArgsConstructor
 public class OrdersFromTabSeparatedLinesConverter implements OrdersFromStringLinesConverter {
 

@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: [onetime-on-startup, default]
+    active: [onetime-on-startup, file-based, default]
 
 service:
   input:

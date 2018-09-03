@@ -1,6 +1,7 @@
 package hellosbt.core.assets.write;
 
 import static hellosbt.config.Spring.Profiles.DEFAULT;
+import static hellosbt.config.Spring.Profiles.FILE_BASED;
 import static hellosbt.config.Spring.Profiles.TEST;
 import static java.lang.String.valueOf;
 import static java.util.stream.Collectors.toList;
@@ -12,7 +13,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-@Service @Profile({DEFAULT, TEST})
+@Service @Profile({FILE_BASED, TEST})
 @NoArgsConstructor
 public class AssetsToTabSeparatedLinesConverter implements AssetsToStringLinesConverter {
 
