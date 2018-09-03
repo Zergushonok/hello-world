@@ -13,6 +13,7 @@ import java.nio.file.Path;
 import java.util.List;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Service;
 
 @Service @Profile({FILE_BASED, TEST})
 @FieldDefaults(level = PRIVATE, makeFinal = true) @Getter
+@Slf4j
 public class OrdersFromFileReader implements OrdersSupplier {
 
   Path filepath;
@@ -42,6 +44,8 @@ public class OrdersFromFileReader implements OrdersSupplier {
 
   @Override
   public Orders get() {
+    log.info("Orders will be read from file {}", filepath);
+
     try {
       List<String> ordersAsLines;
       synchronized (this) { //todo: ugly, use nio filechannel and its lock
