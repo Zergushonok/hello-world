@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.BiFunction;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -89,15 +90,19 @@ public class NaiveClientsOrdersMatcher implements OrdersProcessor {
                                       List<Order> processedOrders,
                                       Map<String, AssetsHolder> assetsByClients) {
 
-    log.trace("Matching the order {}, {} orders has been already matched",
+    log.trace("Matching the order {}, {} orders has been already processed",
         order, processedOrders.size());
 
     if (isNotYetProcessed(order, processedOrders)) {
-      ordersToProcess.parallelStream()
+      Optional<Order> matchedOrder = ordersToProcess.parallelStream()
           .filter(orderToMatch -> doOrdersMatch(order, orderToMatch, processedOrders))
-          .findFirst()
-          .ifPresent(matchedOrder ->
-              processMatched(order, matchedOrder, processedOrders, assetsByClients));
+          .findFirst();
+
+      if (matchedOrder.isPresent()) {
+        processMatched(order, matchedOrder.get(), processedOrders, assetsByClients);
+      } else {
+        processedOrders.add(order);
+      }
     }
   }
 
@@ -138,7 +143,7 @@ public class NaiveClientsOrdersMatcher implements OrdersProcessor {
   private void processMatched(Order order, Order matchedOrder, List<Order> processedOrders,
                               Map<String, AssetsHolder> assetsByClients) {
 
-    log.debug("Order {} has been matched with {}. There are now {} matched orders",
+    log.debug("Order {} has been matched with {}. There are now {} processed orders",
         order, matchedOrder, processedOrders.size());
 
     processedOrders.add(order);
