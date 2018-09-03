@@ -1,13 +1,12 @@
 package hellosbt.core.orders.read;
 
-import static hellosbt.config.Spring.Profiles.DEFAULT;
 import static hellosbt.config.Spring.Profiles.FILE_BASED;
 import static hellosbt.config.Spring.Profiles.TEST;
 import static java.lang.String.format;
 import static java.nio.file.Files.readAllLines;
 import static lombok.AccessLevel.PRIVATE;
 
-import hellosbt.core.orders.OrdersSupplier;
+import hellosbt.core.OrdersSupplier;
 import hellosbt.data.orders.Orders;
 import java.io.IOException;
 import java.nio.file.Path;

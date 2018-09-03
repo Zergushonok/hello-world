@@ -1,6 +1,5 @@
 package hellosbt.core.assets.write;
 
-import static hellosbt.config.Spring.Profiles.DEFAULT;
 import static hellosbt.config.Spring.Profiles.FILE_BASED;
 import static hellosbt.config.Spring.Profiles.TEST;
 import static java.lang.String.format;
@@ -8,7 +7,7 @@ import static java.nio.file.Files.createDirectories;
 import static java.nio.file.Files.write;
 import static lombok.AccessLevel.PRIVATE;
 
-import hellosbt.core.assets.AssetsConsumer;
+import hellosbt.core.AssetsConsumer;
 import hellosbt.data.assets.Assets;
 import java.io.IOException;
 import java.nio.file.Path;

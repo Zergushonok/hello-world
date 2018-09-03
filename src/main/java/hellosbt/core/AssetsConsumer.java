@@ -1,4 +1,4 @@
-package hellosbt.core.assets;
+package hellosbt.core;
 
 import hellosbt.data.assets.Assets;
 import java.util.function.Consumer;

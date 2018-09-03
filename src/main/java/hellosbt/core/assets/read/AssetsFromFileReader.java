@@ -1,13 +1,12 @@
 package hellosbt.core.assets.read;
 
-import static hellosbt.config.Spring.Profiles.DEFAULT;
 import static hellosbt.config.Spring.Profiles.FILE_BASED;
 import static hellosbt.config.Spring.Profiles.TEST;
 import static java.lang.String.format;
 import static java.nio.file.Files.readAllLines;
 import static lombok.AccessLevel.PRIVATE;
 
-import hellosbt.core.assets.AssetsSupplier;
+import hellosbt.core.AssetsSupplier;
 import hellosbt.data.assets.Assets;
 import java.io.IOException;
 import java.nio.file.Path;

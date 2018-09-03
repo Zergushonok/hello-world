@@ -6,7 +6,7 @@ import static hellosbt.data.orders.Order.Type.BUY;
 import static hellosbt.data.orders.Order.Type.SELL;
 import static lombok.AccessLevel.PRIVATE;
 
-import hellosbt.core.orders.OrdersProcessor;
+import hellosbt.core.OrdersProcessor;
 import hellosbt.data.assets.Asset;
 import hellosbt.data.assets.Assets;
 import hellosbt.data.clients.AssetsHolder;

@@ -1,4 +1,4 @@
-package hellosbt.core.orders;
+package hellosbt.core;
 
 import hellosbt.data.assets.Assets;
 import hellosbt.data.orders.Orders;
