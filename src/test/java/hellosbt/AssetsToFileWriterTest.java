@@ -20,6 +20,9 @@ public class AssetsToFileWriterTest extends BaseTest {
   @Autowired AssetsToFileWriter assetsToFileWriter;
   @Autowired AssetsToTabSeparatedLinesConverter assetsToTabSeparatedLinesConverter;
 
+  //todo: tests for negative cases, i.e. attempts to write malformed info
+  //todo: basic tests that validate file contents afterwards
+
   @Test
   public void testTest() {
     Asset a = NamedAsset.of("A");

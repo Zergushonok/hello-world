@@ -16,8 +16,11 @@ public class OrdersFromFileReaderTest extends BaseTest {
   @Autowired OrdersFromFileReader ordersFromFileReader;
   @Autowired OrdersFromTabSeparatedLinesConverter ordersFromTabSeparatedLinesConverter;
 
+  //todo: tests covering negative cases (incorrect format etc.)
+  //todo: tests matching contents with etalon
+
   @Test
   public void testTest() {
-    log.info(ordersFromFileReader.get().toString());
+    ordersFromFileReader.get();
   }
 }

@@ -16,8 +16,11 @@ public class AssetsFromFileReaderTest extends BaseTest {
   @Autowired AssetsFromFileReader assetsFromFileReader;
   @Autowired AssetsFromTabSeparatedLinesConverter assetsFromTabSeparatedLinesConverter;
 
+  //todo: tests covering negative cases (incorrect format etc.)
+  //todo: tests matching contents with etalon
+
   @Test
   public void testTest() {
-    log.info(assetsFromFileReader.get().toString());
+    assetsFromFileReader.get();
   }
 }
