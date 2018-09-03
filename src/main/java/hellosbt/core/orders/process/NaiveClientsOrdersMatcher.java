@@ -26,6 +26,31 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+/**
+ * A naive implementation of OrdersProcessor that looks for matching orders from different clients
+ * in the input clients list, emulates a trade between these clients with matching orders,
+ * reflecting the changes to clients' balances and asset quantities
+ * in the resulting assets instance.
+ *
+ * This implementation considers the orders to be matching if they:
+ * - have the exact same financial parameters (price per asset and the traded quantity)
+ * - belong to different clients
+ * - have different types (e.g. buy vs sell or vice versa)
+ *
+ * It does not pay any attention to whether or not a client will be in debt
+ * (financially or by one or more of his assets) after any of his transactions.
+ * Likewise, it does not prohibit clients that are in debt to make transactions.
+ * Basically, every client has an infinite loan on this stock exchange, and no loan sharks, YAY!
+ *
+ * Orders are processed in the same order they were supplied. Which means that if the client C1
+ * places a purchase order, and the clients C3 and C2 place matching sell orders one after another,
+ * only the C3's order will be matched as considered to be the first one chronologically.
+ *
+ * This implementation should not process any order more than once.
+ * The runtime will probably be around O(n^2) in the worst case when we have no matching
+ * orders at all.
+ */
+
 @Service @Profile({DEFAULT, TEST})
 @NoArgsConstructor
 @FieldDefaults(level = PRIVATE)
@@ -115,6 +140,11 @@ public class NaiveClientsOrdersMatcher implements OrdersProcessor {
 
   //todo: extract functions for re-use, use via lambdas
 
+  /**
+   * A function that emulates a sell or a purchase.
+   * It constructs a new instance of a Client with an updated balance, depending on the nature
+   * of the trade order.
+   */
   @Component @Profile({DEFAULT, TEST})
   public static class TransactionProcessor
       implements BiFunction<AssetsHolder, Order, AssetsHolder> {
