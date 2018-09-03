@@ -20,4 +20,4 @@ service:
 logging:
   level:
     ROOT: INFO
-    hellosbt: DEBUG
+    hellosbt: INFO
