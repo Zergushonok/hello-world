@@ -83,7 +83,7 @@ public class NaiveClientsOrdersMatcher implements OrdersProcessor {
                                       Map<String, AssetsHolder> assetsByClients) {
 
     if (isNotYetProcessed(order, processedOrders)) {
-      ordersToProcess.stream()
+      ordersToProcess.parallelStream()
           .filter(orderToMatch -> doOrdersMatch(order, orderToMatch, processedOrders))
           .findFirst()
           .ifPresent(matchedOrder ->
