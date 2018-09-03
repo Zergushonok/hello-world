@@ -1,7 +1,6 @@
 package hellosbt.core.assets.read;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static hellosbt.config.Spring.Profiles.DEFAULT;
 import static hellosbt.config.Spring.Profiles.FILE_BASED;
 import static hellosbt.config.Spring.Profiles.TEST;
 import static java.lang.Integer.valueOf;
@@ -11,7 +10,7 @@ import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 
 import hellosbt.data.assets.Asset;
-import hellosbt.data.assets.Assets;
+import hellosbt.data.clients.Assets;
 import hellosbt.data.assets.AssetsByHolders;
 import hellosbt.data.clients.AssetsHolder;
 import hellosbt.data.clients.Client;

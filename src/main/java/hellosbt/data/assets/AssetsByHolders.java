@@ -2,6 +2,7 @@ package hellosbt.data.assets;
 
 import static lombok.AccessLevel.PRIVATE;
 
+import hellosbt.data.clients.Assets;
 import hellosbt.data.clients.AssetsHolder;
 import java.util.Map;
 import lombok.Getter;

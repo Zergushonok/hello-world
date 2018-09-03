@@ -8,7 +8,7 @@ import static lombok.AccessLevel.PRIVATE;
 
 import hellosbt.core.OrdersProcessor;
 import hellosbt.data.assets.Asset;
-import hellosbt.data.assets.Assets;
+import hellosbt.data.clients.Assets;
 import hellosbt.data.clients.AssetsHolder;
 import hellosbt.data.clients.Client;
 import hellosbt.data.orders.Order;

@@ -1,6 +1,6 @@
 package hellosbt.core;
 
-import hellosbt.data.assets.Assets;
+import hellosbt.data.clients.Assets;
 import hellosbt.data.orders.Orders;
 import java.util.function.BiFunction;
 

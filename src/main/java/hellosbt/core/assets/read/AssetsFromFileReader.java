@@ -7,7 +7,7 @@ import static java.nio.file.Files.readAllLines;
 import static lombok.AccessLevel.PRIVATE;
 
 import hellosbt.core.AssetsSupplier;
-import hellosbt.data.assets.Assets;
+import hellosbt.data.clients.Assets;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;

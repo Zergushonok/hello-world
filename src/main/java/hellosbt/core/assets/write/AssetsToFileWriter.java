@@ -8,7 +8,7 @@ import static java.nio.file.Files.write;
 import static lombok.AccessLevel.PRIVATE;
 
 import hellosbt.core.AssetsConsumer;
-import hellosbt.data.assets.Assets;
+import hellosbt.data.clients.Assets;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collection;

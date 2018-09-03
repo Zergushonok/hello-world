@@ -1,12 +1,11 @@
 package hellosbt.core.assets.write;
 
-import static hellosbt.config.Spring.Profiles.DEFAULT;
 import static hellosbt.config.Spring.Profiles.FILE_BASED;
 import static hellosbt.config.Spring.Profiles.TEST;
 import static java.lang.String.valueOf;
 import static java.util.stream.Collectors.toList;
 
-import hellosbt.data.assets.Assets;
+import hellosbt.data.clients.Assets;
 import hellosbt.data.clients.AssetsHolder;
 import java.util.List;
 import lombok.NoArgsConstructor;

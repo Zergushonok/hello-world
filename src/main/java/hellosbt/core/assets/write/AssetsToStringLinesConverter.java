@@ -1,6 +1,6 @@
 package hellosbt.core.assets.write;
 
-import hellosbt.data.assets.Assets;
+import hellosbt.data.clients.Assets;
 import java.util.Collection;
 import java.util.function.Function;
 
