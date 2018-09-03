@@ -21,6 +21,7 @@ import java.util.Objects;
 import java.util.function.BiFunction;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -54,12 +55,15 @@ import org.springframework.stereotype.Service;
 @Service @Profile({DEFAULT, TEST})
 @NoArgsConstructor
 @FieldDefaults(level = PRIVATE)
+@Slf4j
 public class NaiveClientsOrdersMatcher implements OrdersProcessor {
 
   @Autowired TransactionProcessor transactionProcessor;
 
   @Override
   public Assets apply(Assets assets, Orders orders) {
+    log.info("{} orders will be processed among {} clients",
+        orders.getOrders().size(), assets.getHoldersByNames().size());
 
     Map<String, AssetsHolder> assetsByClients = assets.getHoldersByNames();
 
@@ -74,6 +78,9 @@ public class NaiveClientsOrdersMatcher implements OrdersProcessor {
 
     /* todo: This impl ignores orders from unknown clients,
     allow configuring to handle differently, e.g. by throwing an exception in such a case */
+
+    log.info("Orders matching complete, there are still {} clients on the floor",
+        assets.getHoldersByNames().size());
     return assets;
   }
 
@@ -81,6 +88,9 @@ public class NaiveClientsOrdersMatcher implements OrdersProcessor {
                                       Collection<Order> ordersToProcess,
                                       List<Order> processedOrders,
                                       Map<String, AssetsHolder> assetsByClients) {
+
+    log.trace("Matching the order {}, {} orders has been already matched",
+        order, processedOrders.size());
 
     if (isNotYetProcessed(order, processedOrders)) {
       ordersToProcess.parallelStream()
@@ -93,6 +103,8 @@ public class NaiveClientsOrdersMatcher implements OrdersProcessor {
 
   private boolean doOrdersMatch(Order order, Order orderToMatch,
                                 Collection<Order> processedOrders) {
+
+    log.trace("Checking if the order {} matches with {}", order, orderToMatch);
 
     return !isSameClient(order, orderToMatch)
         && isNotYetProcessed(orderToMatch, processedOrders)
@@ -125,6 +137,10 @@ public class NaiveClientsOrdersMatcher implements OrdersProcessor {
 
   private void processMatched(Order order, Order matchedOrder, List<Order> processedOrders,
                               Map<String, AssetsHolder> assetsByClients) {
+
+    log.debug("Order {} has been matched with {}. There are now {} matched orders",
+        order, matchedOrder, processedOrders.size());
+
     processedOrders.add(order);
     processedOrders.add(matchedOrder);
 
@@ -152,12 +168,18 @@ public class NaiveClientsOrdersMatcher implements OrdersProcessor {
     @Override
     public AssetsHolder apply(AssetsHolder assetsHolder, Order order) {
 
+      log.trace("Applying order {} to the client {}", order, assetsHolder);
+
       int orderValue = order.getPrice() * order.getQuantity();
-      return Client.of(
+      Client result = Client.of(
           assetsHolder.getName(),
           assetsHolder.getWealth()
               + (order.getType() == SELL ? orderValue : -orderValue),
           process(assetsHolder.getAssets(), order));
+
+      log.trace("Resulting client state after applying the order {} to {}: {}",
+          order, assetsHolder, result);
+      return result;
     }
 
     private Map<Asset, Integer> process(Map<Asset, Integer> assets, Order order) {
