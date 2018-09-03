@@ -19,6 +19,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+/**
+ * AssetsConsumer implementation that consumes Assets into the specified file by first converting
+ * them into the List of String lines using the provided converter.
+ */
+
 @Service @Profile({FILE_BASED, TEST})
 @FieldDefaults(level = PRIVATE, makeFinal = true) @Getter
 public class AssetsToFileWriter implements AssetsConsumer {

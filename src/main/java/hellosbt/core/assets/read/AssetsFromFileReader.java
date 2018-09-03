@@ -18,6 +18,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+/**
+ * AssetsSupplier implementation that supplies Assets from the specified file by converting them
+ * from the List of String lines read from this file using the provided converter.
+ */
+
 @Service @Profile({FILE_BASED, TEST})
 @FieldDefaults(level = PRIVATE, makeFinal = true) @Getter
 public class AssetsFromFileReader implements AssetsSupplier {
