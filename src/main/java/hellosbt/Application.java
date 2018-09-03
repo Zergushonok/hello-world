@@ -12,6 +12,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * [onetime-on-startup, file-based, default] active profiles.
  *
  * onetime-on-startup profile means that the run-once order processor service will be executed.
+ *
+ * The locations of input files and the desired location of output file can be specified
+ * in the application.yml properties file.
  */
 @SpringBootApplication
 public class Application {
