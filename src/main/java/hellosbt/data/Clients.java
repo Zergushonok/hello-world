@@ -1,7 +1,7 @@
 package hellosbt.data;
 
 /**
- * An abstraction that represents a map of clients
+ * An abstraction that represents a number of clients
  */
 
 public interface Clients {

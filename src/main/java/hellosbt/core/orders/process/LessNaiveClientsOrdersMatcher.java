@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 /**
- * A naive implementation of OrdersProcessor that looks for matching orders from different clients
+ * A less naive implementation of OrdersProcessor that looks for matching orders from different clients
  * in the input clients list, emulates a trade between these clients with matching orders,
  * reflecting the changes to clients' balances and asset quantities
  * in the resulting clients instance.
