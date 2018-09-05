@@ -1,15 +1,15 @@
 package hellosbt.core;
 
-import hellosbt.data.clients.Assets;
+import hellosbt.data.Clients;
 import java.util.function.Consumer;
 
 /**
- * Functional interface that consumes Assets from some source.
+ * Functional interface that consumes Clients from some source.
  * Follows semantics of the Java's Consumer interface, delegates all implementation details to
  * sub-classes.
  */
 
 @FunctionalInterface
-public interface AssetsConsumer extends Consumer<Assets> {
+public interface ClientsConsumer extends Consumer<Clients> {
 
 }

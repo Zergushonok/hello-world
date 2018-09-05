@@ -1,4 +1,4 @@
-package hellosbt.core.assets.write;
+package hellosbt.core.clients.write;
 
 import static hellosbt.config.Spring.Profiles.FILE_BASED;
 import static hellosbt.config.Spring.Profiles.TEST;
@@ -7,8 +7,8 @@ import static java.nio.file.Files.createDirectories;
 import static java.nio.file.Files.write;
 import static lombok.AccessLevel.PRIVATE;
 
-import hellosbt.core.AssetsConsumer;
-import hellosbt.data.clients.Assets;
+import hellosbt.core.ClientsConsumer;
+import hellosbt.data.Clients;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collection;
@@ -21,42 +21,42 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 /**
- * AssetsConsumer implementation that consumes Assets into the specified file by first converting
+ * ClientsConsumer implementation that consumes Clients into the specified file by first converting
  * them into the List of String lines using the provided converter.
  */
 
 @Service @Profile({FILE_BASED, TEST})
 @FieldDefaults(level = PRIVATE, makeFinal = true) @Getter
 @Slf4j
-public class AssetsToFileWriter implements AssetsConsumer {
+public class ClientsToFileWriter implements ClientsConsumer {
 
   Path filepath;
-  AssetsToStringLinesConverter assetsConverter;
+  ClientsToStringLinesConverter clientsConverter;
 
-  public AssetsToFileWriter(
+  public ClientsToFileWriter(
       @Value("#{ '${service.result.file.path}' ?: systemProperties['user.home'] }"
           + "/#{ '${service.result.file.name}' ?: 'result.txt' }")
           Path filepath,
-      @Autowired AssetsToStringLinesConverter assetsConverter) {
+      @Autowired ClientsToStringLinesConverter clientsConverter) {
 
     this.filepath = filepath;
-    this.assetsConverter = assetsConverter;
+    this.clientsConverter = clientsConverter;
   }
 
   @Override
-  public void accept(Assets assets) {
-    log.info("Resulting assets will be written to file {}", filepath);
+  public void accept(Clients clients) {
+    log.info("Clients data will be written to the file {}", filepath);
 
     try {
-      Collection<String> assetsAsLines = assetsConverter.apply(assets);
+      Collection<String> assetsAsLines = clientsConverter.apply(clients);
       synchronized (this) {
         write(createDirectories(filepath.getParent())
             .resolve(filepath.getFileName()), assetsAsLines);
       }
 
     } catch (IOException e) {
-      throw new RuntimeException(format("Failed to write the assets %s to the file %s",
-          assets, filepath), e);
+      throw new RuntimeException(format("Failed to write the clients data to the file %s",
+          filepath), e);
     }
   }
 }
