@@ -10,6 +10,6 @@ import org.apache.logging.log4j.util.Supplier;
  */
 
 @FunctionalInterface
-public interface ClientsSupplier extends Supplier<Clients> {
+public interface ClientsSupplier<C> extends Supplier<Clients<C>> {
 
 }

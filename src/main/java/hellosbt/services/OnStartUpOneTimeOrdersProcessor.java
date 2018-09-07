@@ -25,12 +25,12 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 @Slf4j
-public class OnStartUpOneTimeOrdersProcessor {
+public class OnStartUpOneTimeOrdersProcessor<C, O> {
 
-  ClientsSupplier clientsSupplier;
-  OrdersSupplier ordersSupplier;
-  OrdersProcessor ordersProcessor;
-  ClientsConsumer clientsConsumer;
+  ClientsSupplier<C> clientsSupplier;
+  OrdersSupplier<O> ordersSupplier;
+  OrdersProcessor<C, O> ordersProcessor;
+  ClientsConsumer<C> clientsConsumer;
 
   @PostConstruct
   public void doWork() {

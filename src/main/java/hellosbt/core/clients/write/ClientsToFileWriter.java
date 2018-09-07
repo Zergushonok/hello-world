@@ -8,10 +8,12 @@ import static java.nio.file.Files.write;
 import static lombok.AccessLevel.PRIVATE;
 
 import hellosbt.core.ClientsConsumer;
+import hellosbt.data.Client;
 import hellosbt.data.Clients;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.Map;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +30,7 @@ import org.springframework.stereotype.Service;
 @Service @Profile({FILE_BASED, TEST})
 @FieldDefaults(level = PRIVATE, makeFinal = true) @Getter
 @Slf4j
-public class ClientsToFileWriter implements ClientsConsumer {
+public class ClientsToFileWriter implements ClientsConsumer<Map<String, Client>> {
 
   Path filepath;
   ClientsToStringLinesConverter clientsConverter;

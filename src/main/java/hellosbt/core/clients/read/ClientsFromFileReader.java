@@ -7,10 +7,12 @@ import static java.nio.file.Files.readAllLines;
 import static lombok.AccessLevel.PRIVATE;
 
 import hellosbt.core.ClientsSupplier;
+import hellosbt.data.Client;
 import hellosbt.data.Clients;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +29,7 @@ import org.springframework.stereotype.Service;
 @Service @Profile({FILE_BASED, TEST})
 @FieldDefaults(level = PRIVATE, makeFinal = true) @Getter
 @Slf4j
-public class ClientsFromFileReader implements ClientsSupplier {
+public class ClientsFromFileReader implements ClientsSupplier<Map<String, Client>> {
 
   Path filepath;
   ClientsFromStringLinesConverter toClientsConverter;

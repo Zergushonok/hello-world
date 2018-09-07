@@ -10,6 +10,6 @@ import java.util.function.Consumer;
  */
 
 @FunctionalInterface
-public interface ClientsConsumer extends Consumer<Clients> {
+public interface ClientsConsumer<C> extends Consumer<Clients<C>> {
 
 }

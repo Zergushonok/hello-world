@@ -6,7 +6,10 @@ import static java.lang.String.format;
 import static java.nio.file.Files.readAllLines;
 import static lombok.AccessLevel.PRIVATE;
 
+import com.google.common.collect.Multimap;
 import hellosbt.core.OrdersSupplier;
+import hellosbt.data.Asset;
+import hellosbt.data.Order;
 import hellosbt.data.Orders;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -27,7 +30,7 @@ import org.springframework.stereotype.Service;
 @Service @Profile({FILE_BASED, TEST})
 @FieldDefaults(level = PRIVATE, makeFinal = true) @Getter
 @Slf4j
-public class OrdersFromFileReader implements OrdersSupplier {
+public class OrdersFromFileReader implements OrdersSupplier<Multimap<Asset, Order>> {
 
   Path filepath;
   OrdersFromStringLinesConverter toOrdersConverter;

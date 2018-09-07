@@ -12,6 +12,6 @@ import java.util.function.BiFunction;
  */
 
 @FunctionalInterface
-public interface OrdersProcessor extends BiFunction<Clients, Orders, Clients> {
+public interface OrdersProcessor<C, O> extends BiFunction<Clients<C>, Orders<O>, Clients<C>> {
 
 }

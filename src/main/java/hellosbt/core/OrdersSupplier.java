@@ -10,6 +10,6 @@ import java.util.function.Supplier;
  */
 
 @FunctionalInterface
-public interface OrdersSupplier extends Supplier<Orders> {
+public interface OrdersSupplier<O> extends Supplier<Orders<O>> {
 
 }
