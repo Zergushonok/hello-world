@@ -44,6 +44,7 @@ public class OrdersFromTabSeparatedLinesConverter
   }
 
   private TradeOrder toOrder(String rawOrderData) {
+    log.trace("Parsing the line {} into an Order", rawOrderData);
 
     List<String> orderParts = asList(rawOrderData.split("\t"));
     checkArgument(orderParts.size() == 5,
@@ -57,6 +58,8 @@ public class OrdersFromTabSeparatedLinesConverter
     int price = parseInt(orderParts.get(3));
     int quantity = parseInt(orderParts.get(4));
 
-    return TradeOrder.of(client, type, asset, price, quantity);
+    TradeOrder order = TradeOrder.of(client, type, asset, price, quantity);
+    log.trace("The order {} has been parsed from the line {}", order, rawOrderData);
+    return order;
   }
 }
