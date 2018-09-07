@@ -26,6 +26,9 @@ import org.springframework.stereotype.Service;
  * from the List of String lines read from this file using the provided converter.
  */
 
+//todo: clientsFromFileReader, ordersFromFileReader, and clientsToFileWriter all use a similar
+//  structure; this can be refactored to reduce duplicated boilerplate
+
 @Service @Profile({FILE_BASED, TEST})
 @FieldDefaults(level = PRIVATE, makeFinal = true) @Getter
 @Slf4j
@@ -52,6 +55,8 @@ public class ClientsFromFileReader implements ClientsSupplier<Map<String, Client
       List<String> assetsAsLines;
       synchronized (this) { //todo: ugly, use nio filechannel and its lock
         assetsAsLines = readAllLines(filepath);
+        //todo: this will exhaust RAM if the file is large enough, need to stream the file
+        //  and construct the clients entity incrementally via a builder
       }
       return toClientsConverter.apply(assetsAsLines);
 

@@ -1,5 +1,9 @@
 package hellosbt.data;
 
+import static java.lang.String.format;
+import static java.util.Arrays.stream;
+
+import java.util.Arrays;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +14,7 @@ import lombok.experimental.FieldDefaults;
 @ToString
 public class TradeOrder implements Order {
 
-  Client client;
+  String client;
   TradeOrder.Type type;
   Asset asset;
   int price;
@@ -18,7 +22,7 @@ public class TradeOrder implements Order {
 
   int sum;
 
-  private TradeOrder(Client client, TradeOrder.Type type, Asset asset, int price, int quantity) {
+  private TradeOrder(String client, TradeOrder.Type type, Asset asset, int price, int quantity) {
     this.client = client;
     this.type = type;
     this.asset = asset;
@@ -27,7 +31,7 @@ public class TradeOrder implements Order {
     this.sum = price * quantity;
   }
 
-  public static TradeOrder of(Client client, TradeOrder.Type type, Asset asset,
+  public static TradeOrder of(String client, TradeOrder.Type type, Asset asset,
                               int price, int quantity) {
 
     return new TradeOrder(client, type, asset, price, quantity);
@@ -37,8 +41,13 @@ public class TradeOrder implements Order {
   @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true) @Getter
   public enum Type implements Order.Type {
 
-    BUY("s"), SELL("b");
+    BUY("b"), SELL("s");
 
     String type;
+
+    public static Type of(String type) {
+      return stream(values()).filter(it -> it.getType().equals(type)).findAny()
+          .orElseThrow(() -> new EnumConstantNotPresentException(Type.class, type));
+    }
   }
 }

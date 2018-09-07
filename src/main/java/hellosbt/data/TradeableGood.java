@@ -3,6 +3,7 @@ package hellosbt.data;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
@@ -13,5 +14,5 @@ import lombok.experimental.FieldDefaults;
 @ToString
 public class TradeableGood implements Asset {
 
-  String id;
+  @NonNull String id;
 }

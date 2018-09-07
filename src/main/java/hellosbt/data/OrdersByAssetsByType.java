@@ -5,6 +5,8 @@ import static com.google.common.collect.Maps.newHashMap;
 import static com.google.common.collect.MultimapBuilder.hashKeys;
 import static hellosbt.data.TradeOrder.Type.BUY;
 import static hellosbt.data.TradeOrder.Type.SELL;
+import static java.util.Collections.unmodifiableMap;
+import static java.util.Collections.unmodifiableSet;
 import static java.util.Optional.ofNullable;
 
 import com.google.common.collect.ImmutableMap;
@@ -64,11 +66,12 @@ public class OrdersByAssetsByType implements Orders<Map<Asset, Multimap<Integer,
 
   @Override
   public Map<Asset, Multimap<Integer, TradeOrder>> getOrders(Type type) {
-    return orders.get(type);
+    return unmodifiableMap(orders.get(type));
+    //todo: this ofc does not prevent us from modifying the multimap
   }
 
   @Override
   public Set<Type> getOrderTypes() {
-    return orders.keySet();
+    return unmodifiableSet(orders.keySet());
   }
 }

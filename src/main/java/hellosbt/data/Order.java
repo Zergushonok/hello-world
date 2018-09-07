@@ -2,7 +2,7 @@ package hellosbt.data;
 
 public interface Order {
 
-  Client getClient();
+  String getClient();
   Type getType();
   Asset getAsset();
   int getPrice();

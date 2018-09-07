@@ -6,11 +6,9 @@ import static hellosbt.data.TradeOrder.Type.SELL;
 import static hellosbt.data.TradeOrder.of;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 
 import com.google.common.collect.Multimap;
 import hellosbt.data.Asset;
-import hellosbt.data.Client;
 import hellosbt.data.OrdersByAssetsByType;
 import hellosbt.data.TradeOrder;
 import hellosbt.data.TradeableGood;
@@ -24,17 +22,17 @@ public class OrdersByAssetByTypeTest extends BaseTest {
   @Test
   public void rawOrdersListIsCorrectlyConvertedIntoThisStructure() {
 
-    TradeOrder bOrder1 = of(mock(Client.class), BUY, TradeableGood.of("A"), 2, 5);
-    TradeOrder bOrder2 = of(mock(Client.class), BUY, TradeableGood.of("A"), 3, 6);
-    TradeOrder bOrder3 = of(mock(Client.class), BUY, TradeableGood.of("B"), 4, 7);
-    TradeOrder bOrder4 = of(mock(Client.class), BUY, TradeableGood.of("B"), 3, 6);
+    TradeOrder bOrder1 = of("C0", BUY, TradeableGood.of("A"), 2, 5);
+    TradeOrder bOrder2 = of("C0", BUY, TradeableGood.of("A"), 3, 6);
+    TradeOrder bOrder3 = of("C0", BUY, TradeableGood.of("B"), 4, 7);
+    TradeOrder bOrder4 = of("C0", BUY, TradeableGood.of("B"), 3, 6);
 
-    TradeOrder sOrder1 = of(mock(Client.class), SELL, TradeableGood.of("B"), 4, 7);
-    TradeOrder sOrder2 = of(mock(Client.class), SELL, TradeableGood.of("B"), 3, 6);
-    TradeOrder sOrder3 = of(mock(Client.class), SELL, TradeableGood.of("C"), 2, 5);
-    TradeOrder sOrder4 = of(mock(Client.class), SELL, TradeableGood.of("D"), 4, 7);
-    TradeOrder sOrder5 = of(mock(Client.class), SELL, TradeableGood.of("D"), 7, 4);
-    TradeOrder sOrder6 = of(mock(Client.class), SELL, TradeableGood.of("D"), 3, 5);
+    TradeOrder sOrder1 = of("C0", SELL, TradeableGood.of("B"), 4, 7);
+    TradeOrder sOrder2 = of("C0", SELL, TradeableGood.of("B"), 3, 6);
+    TradeOrder sOrder3 = of("C0", SELL, TradeableGood.of("C"), 2, 5);
+    TradeOrder sOrder4 = of("C0", SELL, TradeableGood.of("D"), 4, 7);
+    TradeOrder sOrder5 = of("C0", SELL, TradeableGood.of("D"), 7, 4);
+    TradeOrder sOrder6 = of("C0", SELL, TradeableGood.of("D"), 3, 5);
 
     OrdersByAssetsByType test = OrdersByAssetsByType
         .of(asList(bOrder1, sOrder1, sOrder2, bOrder2, sOrder3,

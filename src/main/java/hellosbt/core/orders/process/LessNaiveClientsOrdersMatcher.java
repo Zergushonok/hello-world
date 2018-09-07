@@ -83,8 +83,8 @@ public class LessNaiveClientsOrdersMatcher implements OrdersProcessor
             if (doOrdersMatch(order, candidate)) {
 
               //do the match
-              Client initiator = clientsByName.get(order.getClient().getName());
-              Client acceptor = clientsByName.get(candidate.getClient().getName());
+              Client initiator = clientsByName.get(order.getClient());
+              Client acceptor = clientsByName.get(candidate.getClient());
 
               Order.Type orderType = order.getType();
               int tradedQuantity = order.getQuantity();

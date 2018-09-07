@@ -6,7 +6,6 @@ import static hellosbt.data.TradeableGood.of;
 
 import com.google.common.collect.ImmutableMap;
 import hellosbt.data.ClientsMap;
-import hellosbt.data.OrdersByAssetsByType;
 import hellosbt.data.TradeOrder;
 import hellosbt.data.Trader;
 import org.junit.Before;
@@ -20,8 +19,8 @@ public class LessNaiveMatcherTest {
   @Test
   public void identicalOrdersAreMatched() {
 
-    TradeOrder orderC1BA_2_5 = TradeOrder.of(c1, BUY, of("A"), 2, 5);
-    TradeOrder orderC2SA_2_5 = TradeOrder.of(c2, SELL, of("A"), 2, 5);
+    TradeOrder orderC1BA_2_5 = TradeOrder.of(c1.getName(), BUY, of("A"), 2, 5);
+    TradeOrder orderC2SA_2_5 = TradeOrder.of(c2.getName(), SELL, of("A"), 2, 5);
     ImmutableMap.of(BUY, orderC1BA_2_5);
     ImmutableMap.of(SELL, orderC1BA_2_5);
 
