@@ -1,13 +1,15 @@
 package hellosbt.core.orders.process;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.util.concurrent.Striped.lazyWeakLock;
 import static hellosbt.config.Spring.Profiles.DEFAULT;
 import static hellosbt.config.Spring.Profiles.TEST;
 import static hellosbt.data.TradeOrder.Type.BUY;
 import static hellosbt.data.TradeOrder.Type.SELL;
-import static lombok.AccessLevel.PRIVATE;
+import static java.lang.Runtime.getRuntime;
 
 import com.google.common.collect.Multimap;
+import com.google.common.util.concurrent.Striped;
 import hellosbt.core.OrdersProcessor;
 import hellosbt.data.Asset;
 import hellosbt.data.Client;
@@ -16,13 +18,11 @@ import hellosbt.data.Order;
 import hellosbt.data.Orders;
 import hellosbt.data.TradeOrder;
 import hellosbt.data.TradeOrder.Type;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.concurrent.locks.Lock;
 import lombok.NoArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -47,7 +47,7 @@ public class LessNaiveClientsOrdersMatcher implements OrdersProcessor
       Clients<Map<String, Client>> clients,
       Orders<Map<Asset, Multimap<Integer, TradeOrder>>> orders) {
 
-    //todo: extract into a validator
+    //todo: move to a validator
     checkArgument(orders.getOrderTypes().stream()
         .allMatch(type -> type == BUY || type == SELL),
         "This order processor works only with the trade orders of types %s and %s, "
@@ -80,8 +80,7 @@ public class LessNaiveClientsOrdersMatcher implements OrdersProcessor
           while (matchCandidates.hasNext()) {
 
             TradeOrder candidate = matchCandidates.next();
-            if (Objects.equals(candidate.getPrice(), order.getPrice())
-                && Objects.equals(candidate.getQuantity(), order.getQuantity())) {
+            if (doOrdersMatch(order, candidate)) {
 
               //do the match
               Client initiator = clientsByName.get(order.getClient().getName());
@@ -109,5 +108,22 @@ public class LessNaiveClientsOrdersMatcher implements OrdersProcessor
         }));
 
     return clients;
+  }
+
+  private boolean doOrdersMatch(TradeOrder first, TradeOrder second) {
+
+    //todo: move to a validator
+    checkArgument(first.getType() == second.getType(),
+        "This order processor expects that input orders are divided into two structures, "
+            + "with buying orders in one and selling orders in another. "
+            + "However, it has encountered orders of identical types "
+            + "when comparing two orders from these two structures; orders are: %s and %s. "
+            + "Most likely, something went horribly wrong "
+            + "with reading orders data from its source", first, second);
+
+
+    return !Objects.equals(second.getClient(), first.getClient())
+        && Objects.equals(second.getPrice(), first.getPrice())
+        && Objects.equals(second.getQuantity(), first.getQuantity());
   }
 }
