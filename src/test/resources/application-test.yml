@@ -12,3 +12,8 @@ service:
     file:
       path: result
       name: result.txt
+
+logging:
+  level:
+    ROOT: INFO
+    hellosbt: DEBUG

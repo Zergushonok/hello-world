@@ -1,17 +1,15 @@
 package hellosbt.core.orders.read;
 
 import static com.google.common.base.Preconditions.checkState;
-import static com.google.common.util.concurrent.Striped.lazyWeakLock;
 import static hellosbt.config.Spring.Profiles.FILE_BASED;
 import static hellosbt.config.Spring.Profiles.TEST;
-import static java.lang.Runtime.getRuntime;
+import static hellosbt.core.locks.FileLocks.fileLock;
 import static java.lang.String.format;
 import static java.nio.file.Files.readAllLines;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static lombok.AccessLevel.PRIVATE;
 
 import com.google.common.collect.Multimap;
-import com.google.common.util.concurrent.Striped;
 import hellosbt.core.OrdersSupplier;
 import hellosbt.data.Asset;
 import hellosbt.data.Orders;
@@ -42,8 +40,6 @@ import org.springframework.stereotype.Service;
 public class OrdersFromFileReader
     implements OrdersSupplier<Map<Asset, Multimap<Integer, TradeOrder>>> {
 
-  private static final Striped<Lock> fileLocks = lazyWeakLock(getRuntime().availableProcessors());
-
   Path filepath;
   OrdersFromStringLinesConverter<Map<Asset, Multimap<Integer, TradeOrder>>> toOrdersConverter;
 
@@ -61,7 +57,7 @@ public class OrdersFromFileReader
   @Override
   public Orders<Map<Asset, Multimap<Integer, TradeOrder>>> get() {
     log.info("Orders will be read from the file {}", filepath);
-    return lockAndRead(fileLocks.get(filepath));
+    return lockAndRead(fileLock(filepath));
   }
 
   private Orders<Map<Asset, Multimap<Integer, TradeOrder>>> lockAndRead(Lock fileLock) {
@@ -70,6 +66,10 @@ public class OrdersFromFileReader
 
       //todo: this will exhaust RAM if the file is large enough, need to stream the file
       //  and construct the orders entity incrementally via a builder
+      //  this will also speed up the program overall, as the time will not be wasted
+      //  on first reading all lines, then converting them to the list of orders,
+      //  and then converting the list of orders into our uber-map structure
+
       return toOrdersConverter.apply(readAllLines(filepath));
 
     } catch (IOException | InterruptedException e) {
@@ -83,6 +83,7 @@ public class OrdersFromFileReader
 
   private void lockOrFail(Lock fileLock) throws InterruptedException {
 
+    //todo: timeout should be configurable
     checkState(fileLock.tryLock(10, SECONDS),
         "Could not obtain a file lock (timeout): %s", filepath);
   }

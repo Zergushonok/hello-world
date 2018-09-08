@@ -10,6 +10,7 @@ import java.util.function.Function;
  */
 
 @FunctionalInterface
-public interface ClientsFromStringLinesConverter extends Function<Collection<String>, Clients> {
+public interface ClientsFromStringLinesConverter<O>
+    extends Function<Collection<String>, Clients<O>> {
 
 }
