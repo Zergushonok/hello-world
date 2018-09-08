@@ -1,6 +1,6 @@
 package hellosbt.data;
 
-import static hellosbt.data.TradeableGood.of;
+import static hellosbt.data.assets.TradeableGood.of;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import hellosbt.BaseTest;

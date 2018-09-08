@@ -1,9 +1,10 @@
-package hellosbt.data;
+package hellosbt.data.orders;
 
 import static com.google.common.base.Strings.emptyToNull;
 import static java.util.Arrays.stream;
 import static java.util.Objects.requireNonNull;
 
+import hellosbt.data.assets.Asset;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;

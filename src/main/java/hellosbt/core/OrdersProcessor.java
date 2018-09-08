@@ -1,7 +1,7 @@
 package hellosbt.core;
 
-import hellosbt.data.Clients;
-import hellosbt.data.Orders;
+import hellosbt.data.clients.Clients;
+import hellosbt.data.orders.Orders;
 import java.util.function.BiFunction;
 
 /**

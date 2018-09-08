@@ -10,8 +10,8 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import static lombok.AccessLevel.PRIVATE;
 
 import hellosbt.core.ClientsSupplier;
-import hellosbt.data.Client;
-import hellosbt.data.Clients;
+import hellosbt.data.clients.Client;
+import hellosbt.data.clients.Clients;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Map;

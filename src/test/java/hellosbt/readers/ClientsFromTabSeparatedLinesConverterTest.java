@@ -1,14 +1,14 @@
 package hellosbt.readers;
 
-import static hellosbt.data.TradeableGood.of;
+import static hellosbt.data.assets.TradeableGood.of;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import hellosbt.BaseTest;
 import hellosbt.core.clients.read.ClientsFromTabSeparatedLinesConverter;
-import hellosbt.data.Asset;
-import hellosbt.data.Client;
-import hellosbt.data.Clients;
+import hellosbt.data.assets.Asset;
+import hellosbt.data.clients.Client;
+import hellosbt.data.clients.Clients;
 import java.util.Map;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;

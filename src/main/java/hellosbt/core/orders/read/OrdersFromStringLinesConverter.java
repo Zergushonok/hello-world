@@ -1,6 +1,6 @@
 package hellosbt.core.orders.read;
 
-import hellosbt.data.Orders;
+import hellosbt.data.orders.Orders;
 import java.util.Collection;
 import java.util.function.Function;
 

@@ -1,6 +1,6 @@
 package hellosbt.core;
 
-import hellosbt.data.Orders;
+import hellosbt.data.orders.Orders;
 import java.util.function.Supplier;
 
 /**

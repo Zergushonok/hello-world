@@ -1,4 +1,4 @@
-package hellosbt.data;
+package hellosbt.data.assets;
 
 public interface Asset {
 

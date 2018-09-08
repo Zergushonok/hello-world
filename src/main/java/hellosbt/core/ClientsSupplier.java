@@ -1,6 +1,6 @@
 package hellosbt.core;
 
-import hellosbt.data.Clients;
+import hellosbt.data.clients.Clients;
 import org.apache.logging.log4j.util.Supplier;
 
 /**

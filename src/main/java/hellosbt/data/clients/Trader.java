@@ -1,10 +1,11 @@
-package hellosbt.data;
+package hellosbt.data.clients;
 
 import static com.google.common.base.Strings.emptyToNull;
 import static java.util.Collections.synchronizedMap;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Objects.requireNonNull;
 
+import hellosbt.data.assets.Asset;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import lombok.AccessLevel;

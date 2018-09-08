@@ -5,8 +5,8 @@ import static hellosbt.config.Spring.Profiles.TEST;
 import static java.lang.String.valueOf;
 import static java.util.stream.Collectors.toList;
 
-import hellosbt.data.Client;
-import hellosbt.data.Clients;
+import hellosbt.data.clients.Client;
+import hellosbt.data.clients.Clients;
 import java.util.List;
 import java.util.Map;
 import lombok.NoArgsConstructor;

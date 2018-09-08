@@ -1,6 +1,6 @@
 package hellosbt.core.clients.read;
 
-import hellosbt.data.Clients;
+import hellosbt.data.clients.Clients;
 import java.util.Collection;
 import java.util.function.Function;
 

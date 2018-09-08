@@ -1,6 +1,7 @@
-package hellosbt.data;
+package hellosbt.data.orders;
 
-import hellosbt.data.Order.Type;
+import hellosbt.data.orders.Order;
+import hellosbt.data.orders.Order.Type;
 import java.util.Set;
 
 /**

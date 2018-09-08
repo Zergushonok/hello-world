@@ -1,18 +1,18 @@
 package hellosbt.data;
 
-import static hellosbt.data.TradeOrder.Type.BUY;
-import static hellosbt.data.TradeOrder.Type.SELL;
-import static hellosbt.data.TradeOrder.of;
+import static hellosbt.data.orders.TradeOrder.Type.BUY;
+import static hellosbt.data.orders.TradeOrder.Type.SELL;
+import static hellosbt.data.orders.TradeOrder.of;
 import static java.util.Collections.emptyMap;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
 import hellosbt.BaseTest;
-import hellosbt.data.Asset;
-import hellosbt.data.Client;
-import hellosbt.data.TradeOrder;
-import hellosbt.data.TradeableGood;
-import hellosbt.data.Trader;
+import hellosbt.data.assets.Asset;
+import hellosbt.data.clients.Client;
+import hellosbt.data.assets.TradeableGood;
+import hellosbt.data.clients.Trader;
+import hellosbt.data.orders.TradeOrder;
 import org.junit.Test;
 
 public class TradeOrderTest extends BaseTest {

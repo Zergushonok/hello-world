@@ -1,14 +1,18 @@
-package hellosbt.data;
+package hellosbt.data.assets;
 
-import java.util.Map;
 import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
 @RequiredArgsConstructor(staticName = "of")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true) @Getter
-public class ClientsMap implements Clients<Map<String, Client>> {
+@EqualsAndHashCode
+@ToString
+public class TradeableGood implements Asset {
 
-  Map<String, Client> clients;
+  @NonNull String id;
 }

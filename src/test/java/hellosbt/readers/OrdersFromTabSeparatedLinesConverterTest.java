@@ -1,9 +1,9 @@
 package hellosbt.readers;
 
 import static com.google.common.collect.Iterables.get;
-import static hellosbt.data.TradeOrder.Type.BUY;
-import static hellosbt.data.TradeOrder.Type.SELL;
-import static hellosbt.data.TradeableGood.of;
+import static hellosbt.data.orders.TradeOrder.Type.BUY;
+import static hellosbt.data.orders.TradeOrder.Type.SELL;
+import static hellosbt.data.assets.TradeableGood.of;
 import static java.util.Arrays.asList;
 import static lombok.AccessLevel.PRIVATE;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -11,9 +11,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.google.common.collect.Multimap;
 import hellosbt.BaseTest;
 import hellosbt.core.orders.read.OrdersFromTabSeparatedLinesConverter;
-import hellosbt.data.Asset;
-import hellosbt.data.Orders;
-import hellosbt.data.TradeOrder;
+import hellosbt.data.assets.Asset;
+import hellosbt.data.orders.Orders;
+import hellosbt.data.orders.TradeOrder;
 import java.util.Map;
 import lombok.experimental.FieldDefaults;
 import org.junit.Test;

@@ -7,10 +7,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import hellosbt.BaseTest;
 import hellosbt.core.clients.write.ClientsToTabSeparatedLinesConverter;
-import hellosbt.data.Client;
-import hellosbt.data.ClientsMap;
-import hellosbt.data.TradeableGood;
-import hellosbt.data.Trader;
+import hellosbt.data.clients.Client;
+import hellosbt.data.clients.ClientsMap;
+import hellosbt.data.assets.TradeableGood;
+import hellosbt.data.clients.Trader;
 import java.util.List;
 import lombok.experimental.FieldDefaults;
 import org.junit.Test;

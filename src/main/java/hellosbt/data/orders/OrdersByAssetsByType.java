@@ -1,17 +1,18 @@
-package hellosbt.data;
+package hellosbt.data.orders;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.Maps.newHashMap;
 import static com.google.common.collect.MultimapBuilder.hashKeys;
-import static hellosbt.data.TradeOrder.Type.BUY;
-import static hellosbt.data.TradeOrder.Type.SELL;
+import static hellosbt.data.orders.TradeOrder.Type.BUY;
+import static hellosbt.data.orders.TradeOrder.Type.SELL;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Collections.unmodifiableSet;
 import static java.util.Optional.ofNullable;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Multimap;
-import hellosbt.data.Order.Type;
+import hellosbt.data.orders.Order.Type;
+import hellosbt.data.assets.Asset;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;

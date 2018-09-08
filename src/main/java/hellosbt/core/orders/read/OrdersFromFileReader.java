@@ -11,9 +11,9 @@ import static lombok.AccessLevel.PRIVATE;
 
 import com.google.common.collect.Multimap;
 import hellosbt.core.OrdersSupplier;
-import hellosbt.data.Asset;
-import hellosbt.data.Orders;
-import hellosbt.data.TradeOrder;
+import hellosbt.data.assets.Asset;
+import hellosbt.data.orders.Orders;
+import hellosbt.data.orders.TradeOrder;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Map;

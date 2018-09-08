@@ -1,4 +1,4 @@
-package hellosbt.data;
+package hellosbt.data.clients;
 
 /**
  * An abstraction that represents a number of clients

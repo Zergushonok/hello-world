@@ -1,18 +1,18 @@
 package hellosbt.data;
 
 import static com.google.common.collect.Iterables.get;
-import static hellosbt.data.TradeOrder.Type.BUY;
-import static hellosbt.data.TradeOrder.Type.SELL;
-import static hellosbt.data.TradeOrder.of;
+import static hellosbt.data.orders.TradeOrder.Type.BUY;
+import static hellosbt.data.orders.TradeOrder.Type.SELL;
+import static hellosbt.data.orders.TradeOrder.of;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.collect.Multimap;
 import hellosbt.BaseTest;
-import hellosbt.data.Asset;
-import hellosbt.data.OrdersByAssetsByType;
-import hellosbt.data.TradeOrder;
-import hellosbt.data.TradeableGood;
+import hellosbt.data.assets.Asset;
+import hellosbt.data.assets.TradeableGood;
+import hellosbt.data.orders.OrdersByAssetsByType;
+import hellosbt.data.orders.TradeOrder;
 import java.util.Collection;
 import java.util.Map;
 import org.junit.Test;
