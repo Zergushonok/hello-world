@@ -1,5 +1,6 @@
 package hellosbt.processors;
 
+import static com.google.common.collect.Maps.newLinkedHashMap;
 import static hellosbt.data.TradeOrder.Type.BUY;
 import static hellosbt.data.TradeOrder.Type.SELL;
 import static hellosbt.data.TradeableGood.of;
@@ -70,19 +71,18 @@ public class LessNaiveMatcherTest extends BaseTest {
   @BeforeClass
   public static void prep() {
 
-    c1 = Trader.of("C1", 100, ImmutableMap.of(
+    c1 = Trader.of("C1", 100, newLinkedHashMap(ImmutableMap.of(
         of("A"), 10,
         of("B"), 20,
-        of("C"), 30));
-    c2 = Trader.of("C2", 200, ImmutableMap.of(
+        of("C"), 30)));
+    c2 = Trader.of("C2", 200, newLinkedHashMap(ImmutableMap.of(
         of("A"), 11,
         of("B"), 22,
-        of("C"), 32));
-    c3 = Trader.of("C3", 300, ImmutableMap.of(
+        of("C"), 32)));
+    c3 = Trader.of("C3", 300, newLinkedHashMap(ImmutableMap.of(
         of("A"), 13,
         of("B"), 23,
-        of("C"), 33));
+        of("C"), 33)));
     clients = ClientsMap.of(ImmutableMap.of("C1", c1, "C2", c2, "C3", c3));
   }
-
 }
