@@ -1,10 +1,11 @@
-package hellosbt;
+package hellosbt.writers;
 
 import static com.google.common.collect.ImmutableMap.of;
 import static java.util.Arrays.asList;
 import static lombok.AccessLevel.PRIVATE;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import hellosbt.BaseTest;
 import hellosbt.core.clients.write.ClientsToTabSeparatedLinesConverter;
 import hellosbt.data.Client;
 import hellosbt.data.ClientsMap;

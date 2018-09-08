@@ -1,4 +1,4 @@
-package hellosbt;
+package hellosbt.readers;
 
 import static com.google.common.collect.Iterables.get;
 import static hellosbt.data.TradeOrder.Type.BUY;
@@ -9,6 +9,7 @@ import static lombok.AccessLevel.PRIVATE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.collect.Multimap;
+import hellosbt.BaseTest;
 import hellosbt.core.orders.read.OrdersFromTabSeparatedLinesConverter;
 import hellosbt.data.Asset;
 import hellosbt.data.Orders;

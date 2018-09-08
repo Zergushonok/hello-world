@@ -1,4 +1,4 @@
-package hellosbt;
+package hellosbt.processors;
 
 import static hellosbt.data.TradeOrder.Type.BUY;
 import static hellosbt.data.TradeOrder.Type.SELL;
@@ -8,6 +8,7 @@ import static lombok.AccessLevel.PRIVATE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.collect.ImmutableMap;
+import hellosbt.BaseTest;
 import hellosbt.core.orders.process.LessNaiveClientsOrdersMatcher;
 import hellosbt.data.Client;
 import hellosbt.data.Clients;

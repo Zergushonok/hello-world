@@ -1,10 +1,11 @@
-package hellosbt;
+package hellosbt.data;
 
 import static hellosbt.data.TradeableGood.of;
 import static java.util.Collections.emptyMap;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.collect.ImmutableMap;
+import hellosbt.BaseTest;
 import hellosbt.data.Trader;
 import org.junit.Before;
 import org.junit.Test;

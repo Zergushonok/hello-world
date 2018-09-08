@@ -1,9 +1,10 @@
-package hellosbt;
+package hellosbt.readers;
 
 import static hellosbt.data.TradeableGood.of;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import hellosbt.BaseTest;
 import hellosbt.core.clients.read.ClientsFromTabSeparatedLinesConverter;
 import hellosbt.data.Asset;
 import hellosbt.data.Client;

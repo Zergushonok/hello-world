@@ -1,4 +1,4 @@
-package hellosbt;
+package hellosbt.data;
 
 import static hellosbt.data.TradeOrder.Type.BUY;
 import static hellosbt.data.TradeOrder.Type.SELL;
@@ -7,6 +7,7 @@ import static java.util.Collections.emptyMap;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
+import hellosbt.BaseTest;
 import hellosbt.data.Asset;
 import hellosbt.data.Client;
 import hellosbt.data.TradeOrder;
