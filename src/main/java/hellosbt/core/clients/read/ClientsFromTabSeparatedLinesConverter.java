@@ -12,9 +12,9 @@ import static java.util.stream.Collectors.toMap;
 import static java.util.stream.IntStream.range;
 
 import hellosbt.data.assets.Asset;
+import hellosbt.data.assets.TradeableGood;
 import hellosbt.data.clients.Client;
 import hellosbt.data.clients.Clients;
-import hellosbt.data.assets.TradeableGood;
 import hellosbt.data.clients.Trader;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Collection;
