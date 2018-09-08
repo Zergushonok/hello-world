@@ -8,6 +8,12 @@ import java.nio.file.Path;
 import java.util.concurrent.locks.Lock;
 import lombok.NoArgsConstructor;
 
+/**
+ * Utility class that gives away locks by file paths.
+ * Uses guava's Striped, thus ensuring that the same lock is returned for equal paths.
+ * Should be used to lock file resources.
+ */
+
 @NoArgsConstructor(access = PRIVATE)
 public class FileLocks {
 

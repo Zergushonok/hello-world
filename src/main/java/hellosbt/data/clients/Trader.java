@@ -36,6 +36,9 @@ import lombok.experimental.FieldDefaults;
  *
  * Note that this implementation does not pay any attention to the negative balance
  * or negative quantities of assets.
+ *
+ * Traders are considered equal if their names are;
+ * the hash code of the name is used as the trader's hash code.
  */
 
 @RequiredArgsConstructor(access = PRIVATE)

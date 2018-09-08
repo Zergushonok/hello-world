@@ -1,7 +1,7 @@
 package hellosbt.config;
 
 /**
- * Supported Spring profile names as constants for convenience.
+ * Supported Spring profile names as constants, for convenience.
  */
 
 public interface Spring {

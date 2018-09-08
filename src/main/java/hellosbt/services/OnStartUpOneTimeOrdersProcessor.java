@@ -16,9 +16,14 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 /**
- * Executes once when the Spring application starts.
- * Reads clients and orders data from the respective suppliers, processes it via the processor,
+ * Executes once if this Spring app is started with the onetime-on-startup profile.
+ *
+ * Reads clients and orders data from the respective suppliers,
+ * processes it via the processor,
  * and flushes the resulting clients data into the consumer.
+ *
+ * This service requires all 4 of its components (2 suppliers, processor, and consumer)
+ * to work with the same types of orders and clients.
  */
 
 @Service @Profile(ONETIME_ON_STARTUP)

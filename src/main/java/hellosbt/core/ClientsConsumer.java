@@ -5,8 +5,8 @@ import java.util.function.Consumer;
 
 /**
  * Functional interface that consumes Clients from some source.
- * Follows semantics of the Java's Consumer interface, delegates all implementation details to
- * sub-classes.
+ * Follows semantics of the Java's Consumer interface,
+ * delegates all implementation details to sub-classes.
  */
 
 @FunctionalInterface

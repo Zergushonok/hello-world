@@ -5,10 +5,10 @@ import hellosbt.data.orders.Orders;
 import java.util.function.BiFunction;
 
 /**
- * Functional interface that processes Clients and Orders in some way which may result
- * in modifications to the Clients object that is in the end returned to the caller.
- * Follows semantics of the Java's BiFunction interface, delegates all implementation details to
- * sub-classes.
+ * Functional interface that processes Clients and Orders in some way that may result
+ * in modifications to the Clients, which are then returned to the caller.
+ * Follows semantics of the Java's BiFunction interface,
+ * delegates all implementation details to sub-classes.
  */
 
 @FunctionalInterface
