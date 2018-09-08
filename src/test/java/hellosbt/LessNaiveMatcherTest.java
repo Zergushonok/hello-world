@@ -3,31 +3,71 @@ package hellosbt;
 import static hellosbt.data.TradeOrder.Type.BUY;
 import static hellosbt.data.TradeOrder.Type.SELL;
 import static hellosbt.data.TradeableGood.of;
+import static java.util.Arrays.asList;
+import static lombok.AccessLevel.PRIVATE;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.collect.ImmutableMap;
+import hellosbt.core.orders.process.LessNaiveClientsOrdersMatcher;
+import hellosbt.data.Client;
+import hellosbt.data.Clients;
 import hellosbt.data.ClientsMap;
+import hellosbt.data.OrdersByAssetsByType;
 import hellosbt.data.TradeOrder;
 import hellosbt.data.Trader;
-import org.junit.Before;
+import java.util.Map;
+import lombok.experimental.FieldDefaults;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
-public class LessNaiveMatcherTest {
+@FieldDefaults(level = PRIVATE)
+public class LessNaiveMatcherTest extends BaseTest {
 
-  Trader c1, c2, c3;
-  ClientsMap clients;
+  @Autowired LessNaiveClientsOrdersMatcher matcher;
+
+  private static Trader c1, c2, c3;
+  private static ClientsMap clients;
+
+  //todo: more test-cases including negative ones
 
   @Test
   public void identicalOrdersAreMatched() {
 
     TradeOrder orderC1BA_2_5 = TradeOrder.of(c1.getName(), BUY, of("A"), 2, 5);
     TradeOrder orderC2SA_2_5 = TradeOrder.of(c2.getName(), SELL, of("A"), 2, 5);
-    ImmutableMap.of(BUY, orderC1BA_2_5);
-    ImmutableMap.of(SELL, orderC1BA_2_5);
 
+    OrdersByAssetsByType orders = OrdersByAssetsByType.of(asList(orderC1BA_2_5, orderC2SA_2_5));
+
+    Clients<Map<String, Client>> updatedClientsMap = matcher.apply(clients, orders);
+    assertThat(updatedClientsMap).isNotNull();
+
+    Map<String, Client> updatedClients = updatedClientsMap.getClients();
+    assertThat(updatedClients).isNotEmpty().hasSameSizeAs(clients.getClients());
+
+    Client uc1 = updatedClients.get("C1");
+    Client uc2 = updatedClients.get("C2");
+    Client uc3 = updatedClients.get("C3");
+
+    assertThat(uc1).isNotNull();
+    assertThat(uc2).isNotNull();
+    assertThat(uc3).isNotNull();
+
+    assertThat(uc1.getBalance()).isEqualTo(100 - orderC1BA_2_5.getSum());
+    assertThat(uc2.getBalance()).isEqualTo(200 + orderC2SA_2_5.getSum());
+
+    assertThat(uc1.getAssets().get(of("A")))
+        .isEqualTo(10 + orderC1BA_2_5.getQuantity());
+
+    assertThat(uc2.getAssets().get(of("A")))
+        .isEqualTo(11 - orderC2SA_2_5.getQuantity());
+
+    assertThat(uc3.getBalance()).isEqualTo(300);
+    assertThat(uc3.getAssets().get(of("A"))).isEqualTo(13);
   }
 
-  @Before
-  public void prep() {
+  @BeforeClass
+  public static void prep() {
 
     c1 = Trader.of("C1", 100, ImmutableMap.of(
         of("A"), 10,

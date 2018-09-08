@@ -115,7 +115,7 @@ public class LessNaiveClientsOrdersMatcher implements OrdersProcessor
   private boolean doOrdersMatch(TradeOrder first, TradeOrder second) {
 
     //todo: move to a validator
-    checkArgument(first.getType() == second.getType(),
+    checkArgument(first.getType() != second.getType(),
         "This order processor expects that input orders are divided into two structures, "
             + "with buying orders in one and selling orders in another. "
             + "However, it has encountered orders of identical types "
