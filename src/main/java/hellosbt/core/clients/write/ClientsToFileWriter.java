@@ -27,8 +27,8 @@ import org.springframework.stereotype.Service;
  * them into the List of String lines using the provided converter.
  */
 
-//todo: clientsFromFileReader, ordersFromFileReader, and clientsToFileWriter all use a similar
-//  structure; this can be refactored to reduce duplicated boilerplate
+//todo: clientsFromFileReader, ordersFromFileReader, and clientsToFileWriter
+//  all use a similar structure; this can be refactored to reduce duplicated boilerplate
 
 @Service @Profile({FILE_BASED, TEST})
 @FieldDefaults(level = PRIVATE, makeFinal = true) @Getter

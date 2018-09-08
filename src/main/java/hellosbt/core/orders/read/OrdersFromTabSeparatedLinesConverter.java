@@ -1,18 +1,16 @@
 package hellosbt.core.orders.read;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Strings.emptyToNull;
 import static hellosbt.config.Spring.Profiles.FILE_BASED;
 import static hellosbt.config.Spring.Profiles.TEST;
+import static hellosbt.data.OrdersByAssetsByType.of;
 import static java.lang.Integer.parseInt;
 import static java.util.Arrays.asList;
-import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toList;
 
 import com.google.common.collect.Multimap;
 import hellosbt.data.Asset;
 import hellosbt.data.Orders;
-import hellosbt.data.OrdersByAssetsByType;
 import hellosbt.data.TradeOrder;
 import hellosbt.data.TradeOrder.Type;
 import hellosbt.data.TradeableGood;
@@ -39,8 +37,7 @@ public class OrdersFromTabSeparatedLinesConverter
   public Orders<Map<Asset, Multimap<Integer, TradeOrder>>> apply(Collection<String> ordersLines) {
     log.debug("Processing {} lines of orders", ordersLines.size());
 
-    return OrdersByAssetsByType.of(ordersLines.stream()
-        .map(this::toOrder).collect(toList()));
+    return of(ordersLines.stream().map(this::toOrder).collect(toList()));
   }
 
   private TradeOrder toOrder(String rawOrderData) {
@@ -50,8 +47,7 @@ public class OrdersFromTabSeparatedLinesConverter
     checkArgument(orderParts.size() == 5,
         "The line %s does not contain a valid order data", orderParts);
 
-    String client = requireNonNull(emptyToNull(orderParts.get(0)),
-        "A client's name cannot be null or empty");
+    String client = orderParts.get(0);
     Type type = Type.of(orderParts.get(1));
     Asset asset = TradeableGood.of(orderParts.get(2));
 

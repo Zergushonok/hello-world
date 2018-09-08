@@ -1,11 +1,12 @@
 package hellosbt.data;
 
-import static java.lang.String.format;
+import static com.google.common.base.Strings.emptyToNull;
 import static java.util.Arrays.stream;
+import static java.util.Objects.requireNonNull;
 
-import java.util.Arrays;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
@@ -31,10 +32,17 @@ public class TradeOrder implements Order {
     this.sum = price * quantity;
   }
 
-  public static TradeOrder of(String client, TradeOrder.Type type, Asset asset,
+  public static TradeOrder of(@NonNull String client,
+                              @NonNull TradeOrder.Type type,
+                              @NonNull Asset asset,
                               int price, int quantity) {
 
-    return new TradeOrder(client, type, asset, price, quantity);
+    return new TradeOrder(validate(client), type, asset, price, quantity);
+  }
+
+  private static String validate(String client) {
+    return requireNonNull(emptyToNull(client),
+        "A client's name cannot be empty");
   }
 
   @RequiredArgsConstructor

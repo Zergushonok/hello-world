@@ -5,6 +5,7 @@ import static hellosbt.data.TradeOrder.Type.BUY;
 import static hellosbt.data.TradeOrder.Type.SELL;
 import static hellosbt.data.TradeableGood.of;
 import static java.util.Arrays.asList;
+import static lombok.AccessLevel.PRIVATE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.collect.Multimap;
@@ -13,13 +14,16 @@ import hellosbt.data.Asset;
 import hellosbt.data.Orders;
 import hellosbt.data.TradeOrder;
 import java.util.Map;
+import lombok.experimental.FieldDefaults;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+@FieldDefaults(level = PRIVATE)
 public class OrdersFromTabSeparatedLinesConverterTest extends BaseTest {
 
   @Autowired OrdersFromTabSeparatedLinesConverter converter;
 
+  //todo: negative cases
   @Test
   public void correctLinesAreConvertedToOrders() {
 
@@ -27,8 +31,8 @@ public class OrdersFromTabSeparatedLinesConverterTest extends BaseTest {
     String line2 = "C2\tb\tB\t8\t2";
     String line3 = "C3\ts\tC\t1\t1";
 
-    Orders<Map<Asset, Multimap<Integer, TradeOrder>>> orders = converter
-        .apply(asList(line1, line2, line3));
+    Orders<Map<Asset, Multimap<Integer, TradeOrder>>> orders =
+        converter.apply(asList(line1, line2, line3));
 
     assertThat(orders.getOrderTypes()).containsExactlyInAnyOrder(BUY, SELL);
 

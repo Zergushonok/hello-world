@@ -23,16 +23,21 @@ public class Trader implements Client {
 
   String name;
   AtomicInteger balance;
-  @NonNull ConcurrentHashMap<Asset, Integer> assets;
+  ConcurrentHashMap<Asset, Integer> assets;
 
-  public static Trader of(String name, int balance, Map<Asset, Integer> assets) {
-    return new Trader(validate(name), new AtomicInteger(balance), new ConcurrentHashMap<>(assets));
+  public static Trader of(@NonNull String name,
+                          int balance,
+                          @NonNull Map<Asset, Integer> assets) {
+
+    return new Trader(validate(name),
+        new AtomicInteger(balance),
+        new ConcurrentHashMap<>(assets));
   }
 
   //todo: move to a validator
   private static String validate(String name) {
     return requireNonNull(emptyToNull(name),
-        "A client's name cannot be null or empty");
+        "A client's name cannot be empty");
   }
 
   @Override

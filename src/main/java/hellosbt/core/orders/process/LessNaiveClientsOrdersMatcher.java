@@ -41,6 +41,8 @@ public class LessNaiveClientsOrdersMatcher implements OrdersProcessor
     <Map<String, Client>,
         Map<Asset, Multimap<Integer, TradeOrder>>> {
 
+  Striped<Lock> locks = lazyWeakLock(getRuntime().availableProcessors());
+
   @Override
   public Clients<Map<String, Client>> apply(
 
