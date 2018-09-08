@@ -93,6 +93,13 @@ public class LessNaiveClientsOrdersMatcher implements OrdersProcessor
       Map<Asset, Multimap<Integer, TradeOrder>> ordersToMatch,
       Map<String, Client> clientsByName) {
 
+    //todo: theoretically, here is a potential for parallel processing
+    //  we can safely analyze orders for different assets in parallel,
+    //  as their respective matches will never intersect
+    //
+    //  For the test data of 8k+ orders, however, introducing a level of parallelism here
+    //  brought no benefit. It is possible that this will change for larger data sets.
+
     ordersToIterate.forEach((asset, ordersBySum) ->
         matchOrdersForAsset(ordersBySum, ordersToMatch, clientsByName));
   }
@@ -130,6 +137,8 @@ public class LessNaiveClientsOrdersMatcher implements OrdersProcessor
     return ordersToMatch.getOrDefault(asset, of()).get(sum);
   }
 
+  //todo: If we are to process the list of orders for the same asset in parallel
+  //  Some synchronization will be needed here, as we are doing a structural modification
   private void matchOrder(
 
       TradeOrder order,
