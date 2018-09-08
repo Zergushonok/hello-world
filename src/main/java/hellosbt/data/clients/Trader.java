@@ -83,6 +83,6 @@ public class Trader implements Client {
 
   @Override
   public void modifyAssetQuantity(Asset asset, int delta) {
-    assets.computeIfPresent(asset, (affectedAsset, quantity) -> quantity += delta);
+    assets.merge(asset, delta, (quantity, delta_) -> quantity + delta_);
   }
 }
