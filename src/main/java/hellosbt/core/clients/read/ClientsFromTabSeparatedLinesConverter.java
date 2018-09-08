@@ -5,6 +5,7 @@ import static hellosbt.config.Spring.Profiles.FILE_BASED;
 import static hellosbt.config.Spring.Profiles.TEST;
 import static hellosbt.data.ClientsMap.of;
 import static java.lang.Integer.parseInt;
+import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
@@ -17,6 +18,7 @@ import hellosbt.data.TradeableGood;
 import hellosbt.data.Trader;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -45,7 +47,14 @@ public class ClientsFromTabSeparatedLinesConverter
     log.debug("Processing {} lines of clients", clientsLines.size());
 
     return of(clientsLines.stream().map(this::toClient)
-        .collect(toMap(Client::getName, identity())));
+
+        .collect(toMap(Client::getName, identity(),
+            (c1, c2) -> {
+              throw new IllegalArgumentException(format("Clients names should be unique "
+                  + "but two clients with the same name %s were encountered", c1.getName()));
+            },
+            LinkedHashMap::new)));
+    /* To preserve the order in which the clients were provided by the source */
   }
 
   private Trader toClient(String rawClientData) {
@@ -70,7 +79,13 @@ public class ClientsFromTabSeparatedLinesConverter
         .mapToObj(dictIndex ->
             assetWithQuantity(rawClientData, dictIndex))
         .collect(
-            toMap(Entry::getKey, Entry::getValue));
+            toMap(Entry::getKey, Entry::getValue,
+                (v1, v2) -> {
+                  throw new IllegalArgumentException(
+                      "Assets possessed by a client should be unique");
+                },
+                LinkedHashMap::new));
+    /* To preserve the order in which the client's assets were provided by the source */
   }
 
   private Entry<Asset, Integer> assetWithQuantity(List<String> rawClientData,

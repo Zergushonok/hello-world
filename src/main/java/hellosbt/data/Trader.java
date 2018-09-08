@@ -1,11 +1,11 @@
 package hellosbt.data;
 
 import static com.google.common.base.Strings.emptyToNull;
+import static java.util.Collections.synchronizedMap;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Objects.requireNonNull;
 
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
@@ -23,7 +23,7 @@ public class Trader implements Client {
 
   String name;
   AtomicInteger balance;
-  ConcurrentHashMap<Asset, Integer> assets;
+  Map<Asset, Integer> assets;
 
   public static Trader of(@NonNull String name,
                           int balance,
@@ -31,7 +31,10 @@ public class Trader implements Client {
 
     return new Trader(validate(name),
         new AtomicInteger(balance),
-        new ConcurrentHashMap<>(assets));
+        synchronizedMap(assets));
+    /* since we need to guarantee both:
+      - that the order of entries is preserved in case the LinkedHashMap is supplied
+      - that the computeIfAbsent is atomic */
   }
 
   //todo: move to a validator
