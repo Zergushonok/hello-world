@@ -11,12 +11,11 @@ import static lombok.AccessLevel.PRIVATE;
 
 import com.google.common.collect.Multimap;
 import hellosbt.core.OrdersSupplier;
-import hellosbt.data.assets.Asset;
 import hellosbt.data.orders.Orders;
 import hellosbt.data.orders.TradeOrder;
+import hellosbt.data.orders.TradeOrderSignature;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
@@ -44,16 +43,16 @@ import org.springframework.stereotype.Service;
 @FieldDefaults(level = PRIVATE, makeFinal = true) @Getter
 @Slf4j
 public class OrdersFromFileReader
-    implements OrdersSupplier<Map<Asset, Multimap<Integer, TradeOrder>>> {
+    implements OrdersSupplier<Multimap<TradeOrderSignature, TradeOrder>> {
 
   Path filepath;
-  OrdersFromStringLinesConverter<Map<Asset, Multimap<Integer, TradeOrder>>> toOrdersConverter;
+  OrdersFromStringLinesConverter<Multimap<TradeOrderSignature, TradeOrder>> toOrdersConverter;
 
   public OrdersFromFileReader(
       @Value("#{ '${service.input.orders.file.path}' ?: systemProperties['user.home'] }"
           + "/#{ '${service.input.orders.file.name}' ?: 'orders.txt' }")
           Path filepath,
-      @Autowired OrdersFromStringLinesConverter<Map<Asset, Multimap<Integer, TradeOrder>>>
+      @Autowired OrdersFromStringLinesConverter<Multimap<TradeOrderSignature, TradeOrder>>
           toOrdersConverter) {
 
     this.filepath = filepath;
@@ -61,12 +60,12 @@ public class OrdersFromFileReader
   }
 
   @Override
-  public Orders<Map<Asset, Multimap<Integer, TradeOrder>>> get() {
+  public Orders<Multimap<TradeOrderSignature, TradeOrder>> get() {
     log.info("Orders will be read from the file {}", filepath);
     return lockAndRead(fileLock(filepath));
   }
 
-  private Orders<Map<Asset, Multimap<Integer, TradeOrder>>> lockAndRead(Lock fileLock) {
+  private Orders<Multimap<TradeOrderSignature, TradeOrder>> lockAndRead(Lock fileLock) {
     try {
       lockOrFail(fileLock);
 

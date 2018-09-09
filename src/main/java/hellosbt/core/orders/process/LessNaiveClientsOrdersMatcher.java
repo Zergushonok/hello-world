@@ -1,7 +1,6 @@
 package hellosbt.core.orders.process;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.collect.ImmutableMultimap.of;
 import static hellosbt.config.Spring.Profiles.DEFAULT;
 import static hellosbt.config.Spring.Profiles.TEST;
 import static hellosbt.data.orders.TradeOrder.Type.BUY;
@@ -15,10 +14,10 @@ import hellosbt.data.clients.Clients;
 import hellosbt.data.orders.Order;
 import hellosbt.data.orders.Orders;
 import hellosbt.data.orders.TradeOrder;
+import hellosbt.data.orders.TradeOrderSignature;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Objects;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,29 +34,30 @@ import org.springframework.stereotype.Service;
  * in the resulting clients data structure.
  *
  * This processor expects to work with the clients presented as by-name-maps,
- * and with the orders data presented as trees of orders
- * grouped first by sum then by asset, and then by order type
- * (see OrdersByAssetByType data structure documentation for details).
+ * and with the orders data presented as two multimaps of orders (for buying and for selling),
+ * grouped by signatures (i.e. by sum and asset).
+ * (see OrdersBySignatureByType data structure documentation for details).
  *
  * In short the logic of matching is as follows:
- * - Among the trees of buying and selling orders, the tree with less entries is selected
- * - For each order in this tree, the counterpart tree is searched for a matching order
- *   - Only orders for the same asset are considered
- *   - Only orders of the same sum are considered
+ * - Among the multimaps of buying and selling orders, the one with less entries is selected
+ * - For each order in this multimap, the counterpart multimap is searched for a matching order
+ *   - Only orders with the same signature (i.e. with the same asset and sum) are considered
+ *   - Among those, only the orders with the same asset and sum are considered
+ *     - We need this check because different orders may still have the same signature
  *   - The orders are matched if their prices and quantities are equal
  *   - If there are several possible matches, the first encountered is selected
  * - The sums and quantities of assets for the clients who make a deal are updated accordingly
- * - The processed match is removed from the counterpart tree
+ * - The processed match is removed from the counterpart multimap
  * so that it will not be encountered again.
  *
  * As a result, if there are no matches at all, the runtime will be O(L) where L is the size
- * of a lesser tree (O(n/2) => O(n) in an average case).
+ * of a lesser multimap (O(n/2) => O(n) in an average case).
  *
- * In a more general case of more or less evenly populated trees,
+ * In a more general case of more or less evenly populated multimaps,
  * the runtime can be approximated as:
  *   O(L) * O(B/A/S), where
- *   - L is the size of a lesser tree
- *   - B is the size of a bigger counterpart tree
+ *   - L is the size of a lesser multimap
+ *   - B is the size of a bigger counterpart multimap
  *   - A is the number of traded assets
  *   - S is the avg. number of distinct sums of orders for each asset
  *
@@ -65,7 +65,7 @@ import org.springframework.stereotype.Service;
  *   O(n/2) * O((n/2) / (A/S)) => O(n) * O(n/A/S) => O(n)
  *
  * This implementation works using a single thread, as it has proved to be fast enough
- * on the sample data even without paralleling of the processing.
+ * on the sample data, even without paralleling of the processing.
  */
 
 //todo: this matcher can most certainly be decomposed into several components,
@@ -77,13 +77,13 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class LessNaiveClientsOrdersMatcher implements OrdersProcessor
     <Map<String, Client>,
-        Map<Asset, Multimap<Integer, TradeOrder>>> {
+        Multimap<TradeOrderSignature, TradeOrder>> {
 
   @Override
   public Clients<Map<String, Client>> apply(
 
       Clients<Map<String, Client>> clients,
-      Orders<Map<Asset, Multimap<Integer, TradeOrder>>> orders) {
+      Orders<Multimap<TradeOrderSignature, TradeOrder>> orders) {
 
     log.info("Matching orders between {} clients", clients.getClients().size());
 
@@ -98,19 +98,17 @@ public class LessNaiveClientsOrdersMatcher implements OrdersProcessor
 
   private Clients<Map<String, Client>> matchOrdersAndUpdateClients(
 
-      Orders<Map<Asset, Multimap<Integer, TradeOrder>>> orders,
+      Orders<Multimap<TradeOrderSignature, TradeOrder>> orders,
       Clients<Map<String, Client>> clients) {
 
-    Map<Asset, Multimap<Integer, TradeOrder>> buyOrders =
-        orders.getOrders(BUY);
-    Map<Asset, Multimap<Integer, TradeOrder>> sellOrders =
-        orders.getOrders(SELL);
+    Multimap<TradeOrderSignature, TradeOrder> buyOrders = orders.getOrders(BUY);
+    Multimap<TradeOrderSignature, TradeOrder> sellOrders = orders.getOrders(SELL);
 
-    Map<Asset, Multimap<Integer, TradeOrder>> ordersToIterate =
+    Multimap<TradeOrderSignature, TradeOrder> ordersToIterate =
         buyOrders.size() < sellOrders.size()
             ? buyOrders : sellOrders;
 
-    Map<Asset, Multimap<Integer, TradeOrder>> ordersToMatch =
+    Multimap<TradeOrderSignature, TradeOrder> ordersToMatch =
         ordersToIterate == buyOrders
             ? sellOrders : buyOrders;
 
@@ -119,58 +117,43 @@ public class LessNaiveClientsOrdersMatcher implements OrdersProcessor
 
     log.info("Orders matching completed, there are still {} clients on the floor",
         clients.getClients().size());
-
     return clients;
   }
 
   private void iterateOrdersFindMatches(
 
-      Map<Asset, Multimap<Integer, TradeOrder>> ordersToIterate,
-      Map<Asset, Multimap<Integer, TradeOrder>> ordersToMatch,
+      Multimap<TradeOrderSignature, TradeOrder> ordersToIterate,
+      Multimap<TradeOrderSignature, TradeOrder> ordersToMatch,
       Map<String, Client> clientsByName) {
 
     //todo: theoretically, here is a potential for parallel processing
-    //  we can safely analyze orders for different assets in parallel,
+    //  we can safely analyze orders with different signatures in parallel,
     //  as their respective matches will never intersect
     //
     //  For the test data of 8k+ orders, however, introducing a level of parallelism here
     //  brought no benefit. It is possible that this will change for larger data sets.
 
-    ordersToIterate.forEach((asset, ordersBySum) ->
-        matchOrdersForAsset(ordersBySum, ordersToMatch, clientsByName));
+    ordersToIterate.forEach((signature, order) ->
+        matchBySignature(order, ordersToMatch, clientsByName));
   }
 
-  private void matchOrdersForAsset(
+  private void matchBySignature(
 
-      Multimap<Integer, TradeOrder> thisAssetOrdersBySum,
-      Map<Asset, Multimap<Integer, TradeOrder>> ordersToMatch,
+      TradeOrder order,
+      Multimap<TradeOrderSignature, TradeOrder> ordersToMatch,
       Map<String, Client> clientsByName) {
 
-    thisAssetOrdersBySum.entries().forEach(orderWithSum ->
-        matchOrder(orderWithSum, ordersToMatch, clientsByName));
+    matchOrder(order,
+        findMatchCandidatesBySignature(order, ordersToMatch),
+        clientsByName);
   }
 
-  private void matchOrder(
+  private Collection<TradeOrder> findMatchCandidatesBySignature(
 
-      Entry<Integer, TradeOrder> orderWithSum,
-      Map<Asset, Multimap<Integer, TradeOrder>> ordersToMatch,
-      Map<String, Client> clientsByName) {
+      TradeOrder order,
+      Multimap<TradeOrderSignature, TradeOrder> ordersToMatch) {
 
-    TradeOrder order = orderWithSum.getValue();
-    int sum = orderWithSum.getKey();
-
-    Collection<TradeOrder> candidates = findMatchCandidatesByAssetAndSum(
-        order.getAsset(), sum, ordersToMatch);
-
-    matchOrder(order, candidates, clientsByName);
-  }
-
-  private Collection<TradeOrder> findMatchCandidatesByAssetAndSum(
-
-      Asset asset, int sum,
-      Map<Asset, Multimap<Integer, TradeOrder>> ordersToMatch) {
-
-    return ordersToMatch.getOrDefault(asset, of()).get(sum);
+    return ordersToMatch.get(order.getSignature());
   }
 
   //todo: If we are to process the list of orders for the same asset in parallel
@@ -195,9 +178,14 @@ public class LessNaiveClientsOrdersMatcher implements OrdersProcessor
   private boolean doOrdersMatch(TradeOrder first, TradeOrder second) {
     sanityCheck(first, second);
 
-    return !Objects.equals(second.getClient(), first.getClient())
-        && Objects.equals(second.getPrice(), first.getPrice())
-        && Objects.equals(second.getQuantity(), first.getQuantity());
+    /* It is still necessary to validate that the assets and sums are equal
+     * because hash codes of different signatures may be identical */
+
+    return !Objects.equals(first.getClient(), second.getClient())
+        && Objects.equals(first.getAsset(), second.getAsset())
+        && Objects.equals(first.getSum(), second.getSum())
+        && Objects.equals(first.getPrice(), second.getPrice())
+        && Objects.equals(first.getQuantity(), second.getQuantity());
   }
 
   //todo: should probably be extracted from here
@@ -208,25 +196,11 @@ public class LessNaiveClientsOrdersMatcher implements OrdersProcessor
             + "are divided into two structures, "
             + "with buying orders in one and selling orders in another. "
             + "However, it has encountered orders of identical types "
-            + "when comparing two orders from these two structures; orders are: %s and %s. "
+            + "when comparing two orders from these two structures; "
+            + "orders are: %s and %s. "
             + "Most likely, something went horribly wrong "
-            + "with reading orders data from its source", first, second);
-
-    checkArgument(first.getSum() == second.getSum(),
-        "This order processor expects to compare "
-            + "only orders of the same sum (price * quantity). "
-            + "However, it has been asked to compare orders "
-            + "of different sums; orders are: %s and %s. "
-            + "Most likely, something went horribly wrong "
-            + "with reading orders data from its source", first, second);
-
-    checkArgument(Objects.equals(first.getAsset(), second.getAsset()),
-        "This order processor expects to compare "
-            + "only orders for the same asset. "
-            + "However, it has been asked to compare orders "
-            + "for different assets; orders are: %s and %s. "
-            + "Most likely, something went horribly wrong "
-            + "with reading orders data from its source", first, second);
+            + "with reading orders data from its source, "
+            + "or the structure has been illegally modified at runtime", first, second);
   }
 
   private void updateAffectedClients(TradeOrder order, TradeOrder candidate,

@@ -3,20 +3,20 @@ package hellosbt.core.orders.read;
 import static com.google.common.base.Preconditions.checkArgument;
 import static hellosbt.config.Spring.Profiles.FILE_BASED;
 import static hellosbt.config.Spring.Profiles.TEST;
-import static hellosbt.data.orders.OrdersByAssetsByType.of;
+import static hellosbt.data.orders.OrdersBySignatureByType.of;
 import static java.lang.Integer.parseInt;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 
 import com.google.common.collect.Multimap;
 import hellosbt.data.assets.Asset;
+import hellosbt.data.assets.TradeableGood;
 import hellosbt.data.orders.Orders;
 import hellosbt.data.orders.TradeOrder;
 import hellosbt.data.orders.TradeOrder.Type;
-import hellosbt.data.assets.TradeableGood;
+import hellosbt.data.orders.TradeOrderSignature;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
@@ -42,10 +42,10 @@ import org.springframework.stereotype.Service;
 @NoArgsConstructor
 @Slf4j
 public class OrdersFromTabSeparatedLinesConverter
-    implements OrdersFromStringLinesConverter<Map<Asset, Multimap<Integer, TradeOrder>>> {
+    implements OrdersFromStringLinesConverter<Multimap<TradeOrderSignature, TradeOrder>> {
 
   @Override
-  public Orders<Map<Asset, Multimap<Integer, TradeOrder>>> apply(Collection<String> ordersLines) {
+  public Orders<Multimap<TradeOrderSignature, TradeOrder>> apply(Collection<String> ordersLines) {
     log.debug("Processing {} lines of orders", ordersLines.size());
 
     return of(ordersLines.stream().map(this::toOrder).collect(toList()));

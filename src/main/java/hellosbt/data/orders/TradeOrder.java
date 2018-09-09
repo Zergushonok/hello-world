@@ -20,10 +20,16 @@ import lombok.experimental.FieldDefaults;
  * The sum is calculated as price * quantity upon construction.
  * No parameters can be updated once the order is constructed.
  *
- * Note that trade orders are NEVER equal, unless they references to the same object.
+ * Note that trade orders are NEVER equal, unless they are references to the same object.
  * Even if two orders have identical parameters, they are still considered to be different.
- * Hash code of the Object is used for the order's hash code,
+ * Hash code impl from the Object class is used for the order's hash code,
  * hence it will be unwise to use these objects as keys.
+ *
+ * If you need to store orders in a hash table, an order Signature can be used:
+ * the signature is an immutable object consisting of the order's asset and sum,
+ * its hash code is calculated from these two values,
+ * and therefore this object is handy for grouping orders by signature
+ * in a map-of-collections-like structure (i.e. multimap).
  */
 
 @FieldDefaults(level = PRIVATE, makeFinal = true) @Getter
@@ -38,6 +44,8 @@ public class TradeOrder implements Order {
   int quantity;
   int sum;
 
+  TradeOrderSignature signature;
+
   private TradeOrder(String client, TradeOrder.Type type, Asset asset,
                      int price, int quantity) {
 
@@ -47,6 +55,7 @@ public class TradeOrder implements Order {
     this.price = price;
     this.quantity = quantity;
     this.sum = price * quantity;
+    this.signature = TradeOrderSignature.of(asset, sum);
   }
 
   public static TradeOrder of(@NonNull String client,

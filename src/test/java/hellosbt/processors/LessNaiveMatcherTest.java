@@ -14,7 +14,7 @@ import hellosbt.core.orders.process.LessNaiveClientsOrdersMatcher;
 import hellosbt.data.clients.Client;
 import hellosbt.data.clients.Clients;
 import hellosbt.data.clients.ClientsMap;
-import hellosbt.data.orders.OrdersByAssetsByType;
+import hellosbt.data.orders.OrdersBySignatureByType;
 import hellosbt.data.orders.TradeOrder;
 import hellosbt.data.clients.Trader;
 import java.util.Map;
@@ -39,7 +39,8 @@ public class LessNaiveMatcherTest extends BaseTest {
     TradeOrder orderC1BA_2_5 = TradeOrder.of(c1.getName(), BUY, of("A"), 2, 5);
     TradeOrder orderC2SA_2_5 = TradeOrder.of(c2.getName(), SELL, of("A"), 2, 5);
 
-    OrdersByAssetsByType orders = OrdersByAssetsByType.of(asList(orderC1BA_2_5, orderC2SA_2_5));
+    OrdersBySignatureByType orders =
+        OrdersBySignatureByType.of(asList(orderC1BA_2_5, orderC2SA_2_5));
 
     Clients<Map<String, Client>> updatedClientsMap = matcher.apply(clients, orders);
     assertThat(updatedClientsMap).isNotNull();

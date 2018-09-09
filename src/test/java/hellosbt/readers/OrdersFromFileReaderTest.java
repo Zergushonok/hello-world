@@ -7,10 +7,9 @@ import com.google.common.collect.Multimap;
 import hellosbt.BaseTest;
 import hellosbt.core.orders.read.OrdersFromFileReader;
 import hellosbt.core.orders.read.OrdersFromTabSeparatedLinesConverter;
-import hellosbt.data.assets.Asset;
 import hellosbt.data.orders.Orders;
 import hellosbt.data.orders.TradeOrder;
-import java.util.Map;
+import hellosbt.data.orders.TradeOrderSignature;
 import lombok.experimental.FieldDefaults;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +25,11 @@ public class OrdersFromFileReaderTest extends BaseTest {
   @Test
   public void linesOfOrdersAreConvertedIntoAnOrdersStructure() {
 
-    Orders<Map<Asset, Multimap<Integer, TradeOrder>>> orders = fileReader.get();
+    Orders<Multimap<TradeOrderSignature, TradeOrder>> orders = fileReader.get();
     assertThat(orders).isNotNull();
     assertThat(orders.getOrderTypes()).isNotEmpty();
 
     orders.getOrderTypes().forEach(type -> {
-      assertThat(orders.getOrders(type)).isNotEmpty();
+      assertThat(orders.getOrders(type).asMap()).isNotEmpty();
     });
   }}
