@@ -244,6 +244,6 @@ public class LessNaiveClientsOrdersMatcher implements OrdersProcessor
             : tradedQuantity);
 
     log.debug("Deal between {} and {}; asset: {}, traded: {}, sum: {}",
-        initiator, acceptor, tradedAsset, tradedQuantity, sum);
+        initiator.getName(), acceptor.getName(), tradedAsset.getId(), tradedQuantity, sum);
   }
 }
