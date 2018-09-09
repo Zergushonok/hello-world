@@ -26,10 +26,46 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 /**
- * A less naive implementation of OrdersProcessor that looks for matching orders from different clients
- * in the input clients list, emulates a trade between these clients with matching orders,
- * reflecting the changes to clients' balances and asset quantities
- * in the resulting clients instance.
+ * A less naive implementation of OrdersProcessor.
+ *
+ * Looks for matching orders from different clients from the input clients data structure
+ * and emulates trade deals between clients with matching orders.
+ *
+ * Changes to the clients' balances and asset quantities are reflected
+ * in the resulting clients data structure.
+ *
+ * This processor expects to work with the clients presented as by-name-maps,
+ * and with the orders data presented as trees of orders
+ * grouped first by sum then by asset, and then by order type
+ * (see OrdersByAssetByType data structure documentation for details).
+ *
+ * In short the logic of matching is as follows:
+ * - Among the trees of buying and selling orders, the tree with less entries is selected
+ * - For each order in this tree, the counterpart tree is searched for a matching order
+ *   - Only orders for the same asset are considered
+ *   - Only orders of the same sum are considered
+ *   - The orders are matched if their prices and quantities are equal
+ *   - If there are several possible matches, the first encountered is selected
+ * - The sums and quantities of assets for the clients who make a deal are updated accordingly
+ * - The processed match is removed from the counterpart tree
+ * so that it will not be encountered again.
+ *
+ * As a result, if there are no matches at all, the runtime will be O(L) where L is the size
+ * of a lesser tree (O(n/2) => O(n) in an average case).
+ *
+ * In a more general case of more or less evenly populated trees,
+ * the runtime can be approximated as: *
+ *   O(L) * O(B/A/S), where
+ *   - L is the size of a lesser tree
+ *   - B is the size of a bigger counterpart tree
+ *   - A is the number of traded assets
+ *   - S is the avg. number of distinct sums of orders for each asset
+ *
+ * which should approximate to:
+ *   O(n/2) * O((n/2) / (A/S)) => O(n) * O(n/A/S) => O(n)
+ *
+ * This implementation works using a single thread, as it has proved to be fast enough
+ * on the sample data even without paralleling of the processing.
  */
 
 //todo: this matcher can most certainly be decomposed into several components,

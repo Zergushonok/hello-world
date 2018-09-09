@@ -44,6 +44,13 @@ import lombok.experimental.FieldDefaults;
  * it is more convenient to use the static "of" method that accepts a simple list of orders
  * to obtain an instance of this class.
  *
+ * The encounter order of lists of orders, associated with each sum for each asset for each type,
+ * will be the same as the encounter order of these orders in the input orders list.
+ *
+ * For example, o_buy_A_10_2, o_buy_A_20_1, o_buy_A_10_2 from the input list will be stored
+ * in this exact order in the list of orders associated with the sum 20, asset A, type BUY.
+ * Thus the chronological sequence of orders is preserved inside each group.
+ *
  * getOrderTypes and getOrders return read-only views of types and assets collections.
  */
 
