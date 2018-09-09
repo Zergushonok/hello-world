@@ -1,17 +1,74 @@
-# Compared to v1
-## Limitations of the naive matcher
-The initial implementation cannot process more than a few dozens of orders in a reasonable time because:
-- It has to check every order in the list
-- For every order, it has to, again, iterate over every order in the list until it finds a match
-- It stores processed orders in a separate list and checks every new order against this list to skip the orders that have already been matched. This means that, as the number of matched orders grows, more and more time is needed to check, whether a new order has already been matched or not.
+# Пример
 
-As a result, the time complexity looks like O(n^2) when we have no matching orders at all, and will probably be worse in a more typical case, when the processed orders list increases in size as we go down the initial list of orders.
+При данных для клиентов
 
-## Ways to optimize
-- We can represent the orders not as a single list, but as a two maps -- for two types of orders (buy and sell)
-- The asset (tradaeble good) will be used as a key, and the list of orders for this asset -- as its value
-- This way, when looking for a match, we'll be able to look only among the counterpart orders for the same asset, thus dramatically reducing the number of candidates
-- And since the maximum number of possible matches is the size of a lesser map (if there are 3 selling orders but 10 buying orders, we cannot have more than 3 matches), the algorithm should iterate over the map with less entries. Which means that if there are no selling orders at all, for example, the algorithm will return immediately
-- We can probably remove the matched orders from the maps instead of adding them to a separate buffer
+|C|$|A|B|C|D|
+|--|--|--|--|--|--|
+|C1|1000|130|240|760|320|
+|C2|4350|370|120|950|560|
+|C3|2760|0|0|0|0|
+|C4|560|450|540|480|950|
+|C5|1500|0|0|400|100|
+|C6|1300|890|320|100|0|
+|C7|750|20|0|790|0|
+|C8|7000|90|190|0|0|
+|C9|7250|190|190|0|280|
 
-This is not the final algorithm but rather only a possible approach that may be subject to change. 
+С суммами: 26470	2140	1600	3480	2210
+
+И ордерах из *resources/orders.txt*
+
+Результат:
+
+|C|$|A|B|C|D|
+|--|--|--|--|--|--|
+|C1|20114|140|-715|-41|-251|
+|C2|6690|264|658|736|306|
+|C3|-8210|264|466|200|615|
+|C4|21469|116|-145|347|-1804|
+|C5|-2797|140|249|475|211|
+|C6|19651|-295|-1065|197|290|
+|C7|3669|-86|120|512|150|
+|C8|-18507|758|1003|522|1515|
+|C9|-15609|839|1029|532|1178|
+
+Суммы (те же): 26470	2140	1600	3480	2210
+
+## Скорость
+Для этих клиентов (9) и ордеров (8000+) обработка занимает около 60 мс на тестовой машине:
+```
+2018-09-09 14:09:29.894  INFO 2932 --- [           main] h.c.o.p.LessNaiveClientsOrdersMatcher    : Matching orders between 9 clients
+2018-09-09 14:09:29.953  INFO 2932 --- [           main] h.c.o.p.LessNaiveClientsOrdersMatcher    : Orders matching completed, there are still 9 clients on the floor
+```
+
+## Логика
+### Клиенты
+Клиенты представлены в памяти как LinkedHashMap по имени клиента. 
+
+У каждого клиента есть LinkedHashMap бумаг по имени бумаги. Linked используется чтобы гарантировать, что клиенты и их бумаги запишутся в файл результата в том же порядке, в котором они были прочитаны из исходника.
+
+### Ордера
+Ордера представлены в памяти как две мультимапы (Multimap), иначе говоря -- HashMap из ArrayList-ов. Две -- для оредров на покупку и продажу. 
+
+Поскольку у нас два типа ордеров, и мы можем сматчить только ордера разных типов -- есть смысл искать матчи, перебирая не все ордера, а лишь ордера из меньшей структуры, ища матчи среди ордеров большей.
+
+Ключ мультимапы -- объект TradeOrderSignature. Это, по сути, составной ключ из имени ценной бумаги и стоимости ордера; hashcode и equality считаются по этим двум полям.
+
+Значение мультимапы по каждому ключу -- ArrayList ордеров с этой сигнатурой или, другими словами -- ордеров по одной ценной бумаге и с одинаковой стоимостью. Ордера в каждом листе идут в том же порядке, в котором они были прочитаны из исходного файла.
+
+### Поиск
+Два ордера есть смысл рассматривать на предмет матча только если:
+- Они разного типа
+- Они по одной ценной бумаге
+- У них одинаковая стоимость
+
+Таким образом, когда мы ищем для ордера из мультимапы на покупку подходящий ордер из мультимапы на продажу, мы смотрим только на ордера по такой же бумаге, с той же стоимостью; иными словами -- с той же сигнатурой.
+
+Среди этих кандидатов мы ищем первый ордер, который:
+- По той же бумаге (ибо мы не можем гарантировать, что сигнатура у ордеров по разным бумагам не совпадает; по той же логике, по которой не equal объекты могут иметь один hashcode)
+- Имеет те же цену за единицу и количество бумаг, что и исходный ордер
+- Принадлежит не тому же клиенту, что и исходный ордер.
+
+Так как одера-кандидаты обязательно окажутся в листе по одной сигнатуре, и в этом листе ордера лежат в том же порядке, в каком они встретились в исходном файле -- мы можем быть уверены, что сматчим первый по времени из всех подходящих ордеров.
+
+Как только матч найден, клиенты обмениваются деньгами и бумагами, а сматченный оредер удаляется из мультимапы, чтобы больше не встретиться при матчинге других ордеров.
