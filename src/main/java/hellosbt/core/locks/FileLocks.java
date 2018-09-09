@@ -14,6 +14,8 @@ import lombok.NoArgsConstructor;
  * Should be used to lock file resources.
  */
 
+//todo: read-write locks would probably be a better choice
+
 @NoArgsConstructor(access = PRIVATE)
 public class FileLocks {
 

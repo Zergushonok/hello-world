@@ -26,8 +26,14 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 /**
- * ClientsConsumer implementation that consumes Clients into the specified file by first converting
- * them into the List of String lines using the provided converter.
+ * ClientsConsumer implementation that consumes Clients into the specified file
+ * by first converting them into the list of String lines.
+ * It requires a converter to do so.
+ *
+ * If the path to the input file cannot be resolved, it defaults to user.home/result.txt
+ *
+ * This writer will try to lock the file before writing to it.
+ * If it fails to obtain a lock during a specified period, an exception will be thrown.
  */
 
 //todo: clientsFromFileReader, ordersFromFileReader, and clientsToFileWriter

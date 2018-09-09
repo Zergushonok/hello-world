@@ -27,8 +27,14 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 /**
- * OrdersSupplier implementation that supplies Orders from the specified file by converting them
- * from the List of String lines read from this file using the provided converter.
+ * OrdersSupplier implementation that supplies Orders from the specified file
+ * by converting them from the list of String lines read.
+ * It requires a converter to do so.
+ *
+ * If the path to the input file cannot be resolved, it defaults to user.home/orders.txt
+ *
+ * This reader will try to lock the file before reading from it.
+ * If it fails to obtain a lock during a specified period, an exception will be thrown.
  */
 
 //todo: clientsFromFileReader, ordersFromFileReader, and clientsToFileWriter
