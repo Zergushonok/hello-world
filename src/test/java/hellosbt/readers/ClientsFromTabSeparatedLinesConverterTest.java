@@ -2,6 +2,7 @@ package hellosbt.readers;
 
 import static hellosbt.data.assets.TradeableGood.of;
 import static java.util.Arrays.asList;
+import static lombok.AccessLevel.PRIVATE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import hellosbt.BaseTest;
@@ -10,12 +11,11 @@ import hellosbt.data.assets.Asset;
 import hellosbt.data.clients.Client;
 import hellosbt.data.clients.Clients;
 import java.util.Map;
-import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(level = PRIVATE)
 public class ClientsFromTabSeparatedLinesConverterTest extends BaseTest {
 
   @Autowired ClientsFromTabSeparatedLinesConverter converter;

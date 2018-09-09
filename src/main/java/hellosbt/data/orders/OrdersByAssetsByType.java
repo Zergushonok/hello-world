@@ -8,6 +8,7 @@ import static hellosbt.data.orders.TradeOrder.Type.SELL;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Collections.unmodifiableSet;
 import static java.util.Optional.ofNullable;
+import static lombok.AccessLevel.PRIVATE;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Multimap;
@@ -55,7 +56,7 @@ import lombok.experimental.FieldDefaults;
  */
 
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@FieldDefaults(level = PRIVATE, makeFinal = true)
 @ToString
 public class OrdersByAssetsByType
     implements Orders<Map<Asset, Multimap<Integer, TradeOrder>>> {
