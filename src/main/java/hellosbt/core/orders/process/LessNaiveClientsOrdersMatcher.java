@@ -112,6 +112,9 @@ public class LessNaiveClientsOrdersMatcher implements OrdersProcessor
         ordersToIterate == buyOrders
             ? sellOrders : buyOrders;
 
+    log.debug("There are {} buying orders and {} selling orders, iterating over the smaller bunch",
+        buyOrders.size(), sellOrders.size());
+
     iterateOrdersFindMatches(
         ordersToIterate, ordersToMatch, clients.getClients());
 
@@ -164,15 +167,23 @@ public class LessNaiveClientsOrdersMatcher implements OrdersProcessor
       Collection<TradeOrder> matchCandidates,
       Map<String, Client> clientsByName) {
 
+    log.trace("Looking for a match for the order {} among {} candidates",
+        order, matchCandidates.size());
+
     Iterator<TradeOrder> candidates = matchCandidates.iterator();
     while (candidates.hasNext()) {
       TradeOrder candidate = candidates.next();
 
       if (doOrdersMatch(order, candidate)) {
+        log.debug("Orders {} and {} match", order, candidate);
+
         updateAffectedClients(order, candidate, clientsByName);
         candidates.remove();
+
+        log.trace("Order {} has been matched and will no longer be considered", candidate);
       }
     }
+    log.trace("No match found for the order {}", order);
   }
 
   private boolean doOrdersMatch(TradeOrder first, TradeOrder second) {
@@ -231,5 +242,8 @@ public class LessNaiveClientsOrdersMatcher implements OrdersProcessor
         orderType == BUY
             ? -tradedQuantity
             : tradedQuantity);
+
+    log.debug("Deal between {} and {}; asset: {}, traded: {}, sum: {}",
+        initiator, acceptor, tradedAsset, tradedQuantity, sum);
   }
 }
