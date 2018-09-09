@@ -54,7 +54,7 @@ import org.springframework.stereotype.Service;
  * of a lesser tree (O(n/2) => O(n) in an average case).
  *
  * In a more general case of more or less evenly populated trees,
- * the runtime can be approximated as: *
+ * the runtime can be approximated as:
  *   O(L) * O(B/A/S), where
  *   - L is the size of a lesser tree
  *   - B is the size of a bigger counterpart tree
