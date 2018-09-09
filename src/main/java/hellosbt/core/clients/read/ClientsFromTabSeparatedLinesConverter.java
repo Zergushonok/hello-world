@@ -30,7 +30,7 @@ import org.springframework.stereotype.Service;
 /**
  * Clients form String lines converter implementation
  * that expects each input line to be an array
- * of a client's info, his balance, and his assets quantities separated by \t.
+ * of a client's info, his balance, and his assets quantities separated by \t
  *
  * This implementations expects that the first element of the array will be the client's name,
  * the second -- his balance, and the remaining elements -- quantities of his assets.
