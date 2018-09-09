@@ -5,7 +5,7 @@ import java.util.function.Supplier;
 
 /**
  * Functional interface that supplies Orders to some destination.
- * Follows semantics of the Java's Supplier interface,
+ * Follows the contract of the Java's Supplier,
  * delegates all implementation details to sub-classes.
  */
 

@@ -28,9 +28,30 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 /**
- * Clients form String lines converter implementation that expects each input line to be an array
+ * Clients form String lines converter implementation
+ * that expects each input line to be an array
  * of a client's info, his balance, and his assets quantities separated by \t.
+ *
+ * This implementations expects that the first element of the array will be the client's name,
+ * the second -- his balance, and the remaining elements -- quantities of his assets.
+ *
+ * This converter comes with a supplied expected assets dictionary
+ * that specifies the names of assets each client should have.
+ * Each client is required to possess the same number of assets as listed in the dictionary.
+ *
+ * This converter respects the encounter order of both the dictionary
+ * and the array of a client's assets quantities, i.e. it will treat the first quantity
+ * as the quantity of the first asset from the dictionary, and so on.
+ *
+ * In the resulting map of assets quantities for each client
+ * the assets will have the same encounter order as their names in the dictionary.
+ *
+ * The encounter order of the resulting map of clients
+ * will be the same as of the input clients collection.
  */
+
+//todo: extract the schema of a client into a separate component
+//  to support other types of clients easier
 
 @Service @Profile({FILE_BASED, TEST})
 @NoArgsConstructor

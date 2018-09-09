@@ -17,6 +17,10 @@ import org.springframework.stereotype.Service;
 /**
  * Clients to string lines converter implementation that transforms each Client
  * into a line of text.
+ *
+ * The lines will be written in the same order as clients are encountered in the input map.
+ * The array of assets quantities for each client will be written in the same order
+ * as assets are encountered in this client's assets map.
  */
 
 @Service @Profile({FILE_BASED, TEST})

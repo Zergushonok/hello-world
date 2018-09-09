@@ -23,9 +23,20 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 /**
- * Orders form String lines converter implementation that expects each input line to be an array
+ * Orders form String lines converter implementation
+ * that expects each input line to be an array
  * of an orders's parameters separated by \t.
+ *
+ * This implementation expects that the 1st element of the array
+ * will be the client's name, 2nd -- the order type, 3rd -- the traded asset,
+ * and the 4th and 5th -- the price and quantity of the traded asset.
+ *
+ * The transformation of the converted array of orders into the final orders-holding structure
+ * is performed by the TradeOrder's constructor.
  */
+
+//todo: extract the schema of an order into a separate component
+//  to support other types of orders easier
 
 @Service @Profile({FILE_BASED, TEST})
 @NoArgsConstructor

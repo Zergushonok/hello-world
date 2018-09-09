@@ -6,7 +6,8 @@ import java.util.function.Function;
 
 /**
  * Functional interface that transforms the input Clients into a Collection of String lines.
- * Follows the Java's Function semantics, delegates all implementation details to sub-classes.
+ * Follows the contract of the Java's Function,
+ * delegates all implementation details to sub-classes.
  */
 
 @FunctionalInterface

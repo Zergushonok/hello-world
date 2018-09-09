@@ -6,10 +6,12 @@ import java.util.function.Function;
 
 /**
  * Functional interface that transforms the input Collection of String lines into Orders.
- * Follows the Java's Function semantics, delegates all implementation details to sub-classes.
+ * Follows the contract of the Java's Function,
+ * delegates all implementation details to sub-classes.
  */
 
 @FunctionalInterface
-public interface OrdersFromStringLinesConverter<O> extends Function<Collection<String>, Orders<O>> {
+public interface OrdersFromStringLinesConverter<O>
+    extends Function<Collection<String>, Orders<O>> {
 
 }
