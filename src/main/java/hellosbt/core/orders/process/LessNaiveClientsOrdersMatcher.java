@@ -50,20 +50,6 @@ import org.springframework.stereotype.Service;
  * - The processed match is removed from the counterpart multimap
  * so that it will not be encountered again.
  *
- * As a result, if there are no matches at all, the runtime will be O(L) where L is the size
- * of a lesser multimap (O(n/2) => O(n) in an average case).
- *
- * In a more general case of more or less evenly populated multimaps,
- * the runtime can be approximated as:
- *   O(L) * O(B/A/S), where
- *   - L is the size of a lesser multimap
- *   - B is the size of a bigger counterpart multimap
- *   - A is the number of traded assets
- *   - S is the avg. number of distinct sums of orders for each asset
- *
- * which should approximate to:
- *   O(n/2) * O((n/2) / (A/S)) => O(n) * O(n/A/S) => O(n)
- *
  * This implementation works using a single thread, as it has proved to be fast enough
  * on the sample data, even without paralleling of the processing.
  */
