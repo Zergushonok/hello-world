@@ -3,7 +3,6 @@ package hellosbt.core.clients.read;
 import static com.google.common.base.Preconditions.checkArgument;
 import static hellosbt.config.Spring.Profiles.FILE_BASED;
 import static hellosbt.config.Spring.Profiles.TEST;
-import static hellosbt.data.clients.ClientsMap.of;
 import static java.lang.Integer.parseInt;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
@@ -15,6 +14,7 @@ import hellosbt.data.assets.Asset;
 import hellosbt.data.assets.TradeableGood;
 import hellosbt.data.clients.Client;
 import hellosbt.data.clients.Clients;
+import hellosbt.data.clients.ClientsMap;
 import hellosbt.data.clients.Trader;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Collection;
@@ -67,7 +67,7 @@ public class ClientsFromTabSeparatedLinesConverter
   public Clients<Map<String, Client>> apply(Collection<String> clientsLines) {
     log.debug("Processing {} lines of clients", clientsLines.size());
 
-    return of(clientsLines.stream().map(this::toClient)
+    return ClientsMap.of(clientsLines.stream().map(this::toClient)
 
         .collect(toMap(Client::getName, identity(),
             (c1, c2) -> {
